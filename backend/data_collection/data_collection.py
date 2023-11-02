@@ -7,8 +7,8 @@ class DataCollection:
         self.db_name = db_name
 
     def query_store_directions(self, stations, API_KEY):
-        for i in range(len(stations)):
-            for j in range(i + 1, len(stations)):
+        for i in range(50):
+            for j in range(i + 1, 50):
                 self.__query_store_direction(stations, i, j, API_KEY)
                 self.__query_store_direction(stations, j, i, API_KEY)
 

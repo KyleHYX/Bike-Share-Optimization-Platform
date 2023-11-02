@@ -2,7 +2,7 @@ from backend.data_collection.data_collection import DataCollection
 from backend.data_collection.db_setup import DBSetUp
 
 if __name__ == "__main__":
-    db_name = "data_collection.db"
+    db_name = "test1.db"
     API_KEY = ''
 
     db_setup = DBSetUp(db_name)
