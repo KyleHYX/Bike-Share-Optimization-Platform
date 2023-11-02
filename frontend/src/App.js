@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Container, Row, Col } from 'react-bootstrap';
+import { Container, Row, Col, Button } from 'react-bootstrap';
 import { GoogleMap, LoadScript } from '@react-google-maps/api';
 import { Box, TextField, Checkbox, FormControlLabel, IconButton, Card } from '@mui/material';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
@@ -7,9 +7,37 @@ import ExpandLessIcon from '@mui/icons-material/ExpandLess';
 
 function App() {
   const [isExpanded, setIsExpanded] = useState(true);
+  const [src, setSrc] = useState('');
+  const [dst, setDst] = useState('');
 
   const toggleExpand = () => {
     setIsExpanded(!isExpanded);
+  };
+
+  const handleSrcChange = (event) => {
+    setSrc(event.target.value);
+  };
+
+  const handleDstChange = (event) => {
+    setDst(event.target.value);
+  };
+
+  const handleSubmit = async () => {
+    try {
+      const response = await fetch('/get-src-dst', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ src, dst }),
+      });
+
+      const data = await response.json();
+      console.log(data);
+
+    } catch (error) {
+      console.error('Error submitting the form', error);
+    }
   };
 
   const containerStyle = {
@@ -69,12 +97,16 @@ function App() {
                     fullWidth
                     label="src"
                     variant="outlined"
+                    value={src}
+                    onChange={handleSrcChange}
                     style={{ marginBottom: '1rem' }}
                   />
                   <TextField
                     fullWidth
-                    label="dest"
+                    label="dst"
                     variant="outlined"
+                    value={dst}
+                    onChange={handleDstChange}
                     style={{ marginBottom: '1rem' }}
                   />
 
@@ -91,6 +123,7 @@ function App() {
                   />
                 </>
               )}
+              <Button onClick={handleSubmit}>Submit</Button>
               <IconButton
                 onClick={toggleExpand}
                 style={{ color: 'grey', position: 'absolute', bottom: '5px', right: '5px'}}
