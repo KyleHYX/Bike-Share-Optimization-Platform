@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Container, Row, Col, Button } from 'react-bootstrap';
 import { GoogleMap, LoadScript } from '@react-google-maps/api';
 import { Box, TextField, Checkbox, FormControlLabel, IconButton, Card } from '@mui/material';
@@ -9,6 +9,7 @@ function App() {
   const [isExpanded, setIsExpanded] = useState(true);
   const [src, setSrc] = useState('');
   const [dst, setDst] = useState('');
+  const [locations, setLocations] = useState([]);
 
   const toggleExpand = () => {
     setIsExpanded(!isExpanded);
@@ -39,6 +40,28 @@ function App() {
       console.error('Error submitting the form', error);
     }
   };
+  
+  const getLocations = async () => {
+    try {
+      const response = await fetch(`/get-locations`, {method: 'GET', headers: {
+        'Content-Type': 'application/json',
+      }});
+      return await response.json();
+    } catch (error) {
+      console.error("Failed to fetch locations:", error);
+    }
+  };
+
+  useEffect(() => {
+    const fetchLocations = async () => {
+      const fetchedLocations = await getLocations();
+      if (fetchedLocations) {
+        setLocations(fetchedLocations);
+      }
+    };
+    
+    fetchLocations();
+  }, []);
 
   const containerStyle = {
     width: '100%',
@@ -121,6 +144,10 @@ function App() {
                     label="Fastest Route"
                     style={{ color: '#333333' }}
                   />
+                  <div>
+                  {locations}
+                  lskdjf
+                  </div>
                 </>
               )}
               <Button onClick={handleSubmit}>Submit</Button>
