@@ -5,8 +5,8 @@ from backend.data_collection.db_utils.db_ops import db_ops
 
 
 class DBSetUp:
-    def __init__(self, db_name):
-        self.db_name = db_name
+    def __init__(self):
+        pass
 
     def set_up_tables(self):
         self.__set_up_stations()
@@ -14,7 +14,7 @@ class DBSetUp:
         self.__set_up_polylines()
 
     def __set_up_stations(self):
-        with db_ops(self.db_name) as c:
+        with db_ops() as c:
             c.execute("PRAGMA foreign_keys = ON")
             # Create the stations table
             c.execute('''
@@ -27,7 +27,7 @@ class DBSetUp:
                 ''')
 
     def __set_up_time_stations(self):
-        with db_ops(self.db_name) as c:
+        with db_ops() as c:
             # Create the time_stations table
             c.execute('''
                 CREATE TABLE IF NOT EXISTS time_stations (
@@ -46,7 +46,7 @@ class DBSetUp:
             ''')
 
     def __set_up_polylines(self):
-        with db_ops(self.db_name) as c:
+        with db_ops() as c:
             # Create the polylines table
             c.execute('''
                 CREATE TABLE IF NOT EXISTS polylines (

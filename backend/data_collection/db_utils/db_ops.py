@@ -1,10 +1,12 @@
 import sqlite3
 from contextlib import contextmanager
 
+from backend.data_collection.db_utils.dbconfig import DATABASE_URL
+
 
 @contextmanager
-def db_ops(db_name):
-    conn = sqlite3.connect(db_name)
+def db_ops():
+    conn = sqlite3.connect(DATABASE_URL)
     try:
         cur = conn.cursor()
         yield cur

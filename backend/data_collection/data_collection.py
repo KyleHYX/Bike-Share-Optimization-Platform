@@ -3,8 +3,8 @@ from backend.data_collection.db_utils.db_ops import db_ops
 
 
 class DataCollection:
-    def __init__(self, db_name):
-        self.db_name = db_name
+    def __init__(self):
+        pass
 
     def query_store_directions(self, stations, API_KEY):
         for i in range(50):
@@ -13,7 +13,7 @@ class DataCollection:
                 self.__query_store_direction(stations, j, i, API_KEY)
 
     def add_station_to_db(self, stations):
-        with db_ops(self.db_name) as c:
+        with db_ops() as c:
             for station in stations:
                 c.execute('''
                 INSERT INTO stations (name, latitude, longitude)
@@ -68,7 +68,7 @@ class DataCollection:
         return result
 
     def __insert_into_database(self, origin_id, destination_id, directions_data):
-        with db_ops(self.db_name) as c:
+        with db_ops() as c:
             # Insert into time_stations table
             c.execute('''
                 INSERT INTO time_stations (origin, destination, duration_value, duration_text, distance_value, distance_text, start_address, end_address)
