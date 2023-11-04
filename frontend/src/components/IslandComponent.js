@@ -4,7 +4,7 @@ import { Box, TextField, Checkbox, FormControlLabel, IconButton, Card } from '@m
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import ExpandLessIcon from '@mui/icons-material/ExpandLess';
 
-const OpIsland = () => {
+const OpIsland = ({ onPolylineChange }) => {
   const [isExpanded, setIsExpanded] = useState(true);
   const [src, setSrc] = useState('');
   const [dst, setDst] = useState('');
@@ -35,7 +35,7 @@ const OpIsland = () => {
 
   const handleSubmit = async () => {
     try {
-      const response = await fetch('/get-src-dst', {
+      const response = await fetch('http://localhost:3333/get-src-dst', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -45,7 +45,7 @@ const OpIsland = () => {
 
       const data = await response.json();
       console.log(data);
-
+      onPolylineChange(data[0]);
     } catch (error) {
       console.error('Error submitting the form', error);
     }
@@ -53,10 +53,10 @@ const OpIsland = () => {
 
   const getLocations = async () => {
     try {
-      const response = await fetch(`/get-locations`, {
+      const response = await fetch(`http://localhost:3333/get-locations`, { 
         method: 'GET', 
         headers: {
-        'Content-Type': 'application/json',
+          'Content-Type': 'text/plain',
       }});
       return await response.json();
     } catch (error) {
