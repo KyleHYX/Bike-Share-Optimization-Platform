@@ -45,7 +45,7 @@ const OpIsland = ({ onPolylineChange }) => {
 
       const data = await response.json();
       console.log(data);
-      onPolylineChange(data[0]);
+      onPolylineChange(data);
     } catch (error) {
       console.error('Error submitting the form', error);
     }
@@ -117,10 +117,6 @@ const OpIsland = ({ onPolylineChange }) => {
                   label="Fastest Route"
                   style={{ color: '#333333' }}
                 />
-                <div>
-                {locations}
-                lskdjf
-                </div>
               </>
             )}
             <Button onClick={handleSubmit}>Submit</Button>

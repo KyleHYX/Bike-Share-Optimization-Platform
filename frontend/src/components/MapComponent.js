@@ -1,7 +1,8 @@
 import React from 'react';
-import { GoogleMap, LoadScript, Polyline } from '@react-google-maps/api';
+import { GoogleMap, useJsApiLoader, Polyline } from '@react-google-maps/api';
 
-const containerStyle = {
+const MapComponent = ({ polylineData }) => {
+  const containerStyle = {
     width: '100%',
     height: '100%',
     position: 'absolute',
@@ -11,43 +12,32 @@ const containerStyle = {
   };
 
   const center = {
-    lat: 49.2827,
-    lng: 123.1207
+    lat: 49.26249,
+    lng: -123.11422
   };
 
   const polylineOptions = {
-    strokeColor: '#ff2527',
-    strokeOpacity: 0.8,
+    strokeColor: '#FF0000',
+    strokeOpacity: 1.0,
     strokeWeight: 2,
-    fillColor: '#ff2527',
-    fillOpacity: 0.35,
-    clickable: false,
-    draggable: false,
-    editable: false,
-    visible: true,
-    radius: 30000,
-    paths: [],
-    zIndex: 1
   };
 
-  const google = window.google;
-  
-  const MapComponent = ({ polylineData }) => (
-    <LoadScript
-        googleMapsApiKey="AIzaSyB_qcC0gZ_KdDt48vDlhyRZX6xswDAmH_E">
-        <GoogleMap
+  const { isLoaded } = useJsApiLoader({id: 'google-map-script', googleMapsApiKey: 'AIzaSyB_qcC0gZ_KdDt48vDlhyRZX6xswDAmH_E'})
+
+  const [map, setMap] = React.useState(null)
+
+  return isLoaded ? (
+      <GoogleMap
         mapContainerStyle={containerStyle}
         center={center}
         zoom={10}
-        >
-          {polylineData && (
-            <Polyline
-              path={google.maps.geometry.encoding.decodePath(polylineData)}
-              options={polylineOptions}
-            />
-          )}
-        </GoogleMap>
-    </LoadScript>
-  );
+      >
+       <Polyline
+          path={polylineData}
+          options={polylineOptions}
+        />
+      </GoogleMap>
+  ) : <></>
+};
 
-  export default MapComponent;
+export default React.memo(MapComponent);
