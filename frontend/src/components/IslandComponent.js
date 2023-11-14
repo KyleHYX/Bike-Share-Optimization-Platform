@@ -8,7 +8,8 @@ const OpIsland = ({ onPolylineChange }) => {
   const [isExpanded, setIsExpanded] = useState(true);
   const [src, setSrc] = useState('');
   const [dst, setDst] = useState('');
-  const [locations, setLocations] = useState([]);
+  const [opt, setOpt] = useState(0);
+  const [locations, setLocations] = useState(0);
 
   const opIslandStyle = {
     position: 'absolute',
@@ -33,6 +34,10 @@ const OpIsland = ({ onPolylineChange }) => {
     setDst(event.target.value);
   };
 
+  const handleCheckboxChange = (event) => {
+    setOpt(Number(event.target.value));
+  };
+
   const handleSubmit = async () => {
     try {
       const response = await fetch('http://localhost:3333/get-src-dst', {
@@ -40,7 +45,7 @@ const OpIsland = ({ onPolylineChange }) => {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ src, dst }),
+        body: JSON.stringify({ src, dst, opt }),
       });
 
       const data = await response.json();
@@ -107,16 +112,25 @@ const OpIsland = ({ onPolylineChange }) => {
                 />
 
                 <FormControlLabel
-                  control={<Checkbox />}
+                  control={<Checkbox 
+                    checked={opt === 1}
+                    onChange={handleCheckboxChange} 
+                    value="1" />}
                   label="Free Route"
                   style={{ color: '#333333' }}
                 />
 
                 <FormControlLabel
-                  control={<Checkbox />}
+                  control={<Checkbox 
+                    checked={opt === 0}
+                    onChange={handleCheckboxChange} 
+                    value="0" />}
                   label="Fastest Route"
                   style={{ color: '#333333' }}
                 />
+                <div>
+                {locations}
+                </div>
               </>
             )}
             <Button onClick={handleSubmit}>Submit</Button>

@@ -1,7 +1,9 @@
 import React from 'react';
-import { GoogleMap, useJsApiLoader, Polyline } from '@react-google-maps/api';
+import { GoogleMap, useJsApiLoader, Polyline, Marker } from '@react-google-maps/api';
 
-const MapComponent = ({ polylineData }) => {
+const MapComponent = ({ polylineData, markerData }) => {
+  const iconBase = "https://developers.google.com/maps/documentation/javascript/examples/full/images/";
+
   const containerStyle = {
     width: '100%',
     height: '100%',
@@ -22,21 +24,36 @@ const MapComponent = ({ polylineData }) => {
     strokeWeight: 2,
   };
 
-  const { isLoaded } = useJsApiLoader({id: 'google-map-script', googleMapsApiKey: 'AIzaSyB_qcC0gZ_KdDt48vDlhyRZX6xswDAmH_E'})
+  const { isLoaded } = useJsApiLoader({ id: 'google-map-script', googleMapsApiKey: 'AIzaSyB_qcC0gZ_KdDt48vDlhyRZX6xswDAmH_E' })
 
   const [map, setMap] = React.useState(null)
 
   return isLoaded ? (
-      <GoogleMap
-        mapContainerStyle={containerStyle}
-        center={center}
-        zoom={10}
-      >
-       <Polyline
-          path={polylineData}
-          options={polylineOptions}
-        />
-      </GoogleMap>
+    <GoogleMap
+      mapContainerStyle={containerStyle}
+      center={center}
+      zoom={10}
+    >
+      <Polyline
+        path={polylineData}
+        options={polylineOptions}
+      />
+
+      {markerData.map((markerPosition, index) => {
+        let iconUrl;
+        if (index === 0) iconUrl = "";
+        else if (index === markerData.length - 1) iconUrl = "";
+        else iconUrl = "https://maps.google.com/mapfiles/kml/shapes/cycling.png";
+
+        return (
+          <Marker
+            key={index}
+            position={markerPosition}
+            icon={iconUrl}
+          />
+        );
+      })}
+    </GoogleMap>
   ) : <></>
 };
 

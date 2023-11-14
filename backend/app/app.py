@@ -1,6 +1,7 @@
 from flask import Flask, request, jsonify
 from flask_cors import CORS, cross_origin
 
+from backend.app.graph.station_graph import StationGraph
 from backend.app.location_services.fastest_route import get_fastest_route
 from backend.app.stations_model import StationsModel
 import polyline
@@ -21,11 +22,16 @@ def create_app():
         data = request.json
         src = data.get('src')
         dst = data.get('dst')
-        polyline_data = get_fastest_route(src, dst)
-        decoded_polyline = polyline.decode(polyline_data[0][0])
-        parsed_line = [{'lat': line[0], 'lng': line[1]} for line in decoded_polyline]
-        print(parsed_line)
-        return jsonify(parsed_line)
+        opt = data.get('opt')
+        if opt == 0:
+            parsed_data = get_fastest_route(src, dst)
+            print(parsed_data)
+            return jsonify(parsed_data)
+        elif opt == 1:
+            sg = StationGraph()
+            parsed_data = sg.find_free_route(src, dst, 8)
+            print(parsed_data)
+            return jsonify(parsed_data)
 
     @app.route('/get-locations', methods=['GET'])
     @cross_origin()

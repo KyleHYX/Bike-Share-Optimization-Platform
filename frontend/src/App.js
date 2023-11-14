@@ -9,18 +9,20 @@ function App() {
     { lat: 49.26244, lng: -123.11422 },
     { lat: 49.26243, lng: -123.1142 }
   ]);
+  const [markerData, setMarkerData] = useState([]);
 
-  const handlePolylineChange = (newPolyline) => {
+  const handlePolylineChange = (newData) => {
     console.log("received new")
 
-    console.log(newPolyline)
+    console.log(newData)
   
-    setPolylineData(newPolyline);
+    setPolylineData(newData.parsed_lines);
+    setMarkerData(newData.parsed_markers);
   };
 
   return (
     <Container fluid>
-      <MapComponent polylineData={polylineData} />
+      <MapComponent polylineData={polylineData} markerData={markerData} />
       <OpIsland onPolylineChange={handlePolylineChange} />
     </Container>
   );
