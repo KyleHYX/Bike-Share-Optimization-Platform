@@ -1,3 +1,5 @@
+import time
+
 from flask import Flask, request, jsonify
 from flask_cors import CORS, cross_origin
 
@@ -19,6 +21,7 @@ def create_app():
     @app.route('/get-src-dst', methods=['POST'])
     @cross_origin()
     def get_src_dst():
+        start_time = time.time()
         data = request.json
         src = data.get('src')
         dst = data.get('dst')
@@ -26,11 +29,17 @@ def create_app():
         if opt == 0:
             parsed_data = get_fastest_route(src, dst)
             print(parsed_data)
+
+            end_time = time.time()
+            print(f"Method took {end_time - start_time} seconds to run.")
             return jsonify(parsed_data)
         elif opt == 1:
             sg = StationGraph()
             parsed_data = sg.find_free_route(src, dst, 8)
             print(parsed_data)
+
+            end_time = time.time()
+            print(f"Method took {end_time - start_time} seconds to run.")
             return jsonify(parsed_data)
 
     @app.route('/get-locations', methods=['GET'])

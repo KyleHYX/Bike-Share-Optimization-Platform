@@ -54,6 +54,7 @@ class StationGraph:
         queue = [(0, ori)]
         times = {station: float('infinity') for station in self.graph}
         times[ori] = 0
+        predecessors = {ori: None}
         visited = set()
         while queue:
             cur_time, cur_station = heapq.heappop(queue)
@@ -70,21 +71,18 @@ class StationGraph:
                     time = cur_time + weight
                     if time < times[neighbor]:
                         times[neighbor] = time
+                        predecessors[neighbor] = cur_station
                         heapq.heappush(queue, (time, neighbor))
 
-        # Reconstruct route
-        route = []
-        while dst:
-            route.append(dst)
-            for station, time in self.graph[dst].items():
-                if times[dst] - time == times[station]:
-                    dst = station
-                    break
-            else:
-                break
-        return list(reversed(route))
+        path = []
+        while dst is not None:
+            path.insert(0, dst)
+            dst = predecessors[dst]
+        return path
+        # return list(reversed(route))
 
 
 if __name__ == "__main__":
     sg = StationGraph()
+    # sg.find_free_route("Cypress & Cornwall", "Hornby & Nelson", 8)
     sg.find_free_route("Cardero & Robson", "10th & Cambie", 8)

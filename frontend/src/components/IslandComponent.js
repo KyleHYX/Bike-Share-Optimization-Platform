@@ -128,9 +128,6 @@ const OpIsland = ({ onPolylineChange }) => {
                   label="Fastest Route"
                   style={{ color: '#333333' }}
                 />
-                <div>
-                {locations}
-                </div>
               </>
             )}
             <Button onClick={handleSubmit}>Submit</Button>
