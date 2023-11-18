@@ -5,6 +5,7 @@ from flask_cors import CORS, cross_origin
 
 from backend.app.graph.station_graph import StationGraph
 from backend.app.location_services.fastest_route import get_fastest_route
+from backend.app.location_services.free_route import find_free_route
 from backend.app.stations_model import StationsModel
 import polyline
 
@@ -35,7 +36,7 @@ def create_app():
             return jsonify(parsed_data)
         elif opt == 1:
             sg = StationGraph()
-            parsed_data = sg.find_free_route(src, dst, 8)
+            parsed_data = find_free_route(src, dst, 8, sg.graph)
             print(parsed_data)
 
             end_time = time.time()
