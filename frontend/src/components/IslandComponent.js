@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Container, Row, Col, Button } from 'react-bootstrap';
-import { Box, TextField, Checkbox, FormControlLabel, IconButton, Card } from '@mui/material';
+import { Box, TextField, Checkbox, FormControlLabel, IconButton, Slider } from '@mui/material';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import ExpandLessIcon from '@mui/icons-material/ExpandLess';
 
@@ -9,6 +9,7 @@ const OpIsland = ({ onPolylineChange }) => {
   const [src, setSrc] = useState('');
   const [dst, setDst] = useState('');
   const [opt, setOpt] = useState(0);
+  const [sliderValue, setSliderValue] = useState(5);
   const [locations, setLocations] = useState(0);
 
   const opIslandStyle = {
@@ -38,6 +39,10 @@ const OpIsland = ({ onPolylineChange }) => {
     setOpt(Number(event.target.value));
   };
 
+  const handleSliderChange = (event, newValue) => {
+    setSliderValue(newValue);
+  };
+
   const handleSubmit = async () => {
     try {
       const response = await fetch('http://localhost:3333/get-src-dst', {
@@ -45,7 +50,7 @@ const OpIsland = ({ onPolylineChange }) => {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ src, dst, opt }),
+        body: JSON.stringify({ src, dst, opt, sliderValue }),
       });
 
       const data = await response.json();
@@ -127,6 +132,24 @@ const OpIsland = ({ onPolylineChange }) => {
                     value="0" />}
                   label="Fastest Route"
                   style={{ color: '#333333' }}
+                />
+
+                <FormControlLabel
+                  control={<Checkbox 
+                    checked={opt === 2}
+                    onChange={handleCheckboxChange}
+                    value="2" />}
+                  label="Skyline Routes"
+                  style={{ color: '#333333' }}
+                />
+
+                <Slider
+                  value={sliderValue}
+                  min={0}
+                  max={10}
+                  step={1}
+                  onChange={handleSliderChange}
+                  disabled={opt !== 2}
                 />
               </>
             )}

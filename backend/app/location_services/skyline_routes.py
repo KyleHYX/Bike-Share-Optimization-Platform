@@ -1,8 +1,10 @@
 import copy
+import sys
 import time
 
 from backend.app.graph import config
 from backend.app.graph.station_graph import StationGraph
+from backend.app.location_services.location_utils import parse_multi_station_route
 
 
 class Route:
@@ -12,12 +14,36 @@ class Route:
         self.spend_cost = spend_cost
 
 
+def get_skyline_result(ori, dst, sg, preference):
+    free_time = 8
+    max_step = sg.graph[ori][dst] / free_time + 3
+    skyline_results = get_skyline_routes_approx(ori, dst, sg.graph, sg.spend_graph, max_step)
+
+    time_cost_sum = 0
+    spend_cost_sum = 0
+    for route in skyline_results:
+        time_cost_sum += route.time_cost
+        spend_cost_sum += route.spend_cost
+
+    weight = spend_cost_sum / time_cost_sum
+
+    opt_route = 0
+    min_val = sys.maxsize
+    for route in skyline_results:
+        cur_val = route.time_cost * weight * preference/10 + route.spend_cost * (10-preference)/10
+        if cur_val < min_val:
+            opt_route = route
+            min_val = cur_val
+    print(opt_route.spend_cost)
+    print(opt_route.time_cost)
+    return parse_multi_station_route(opt_route.path)
+
+
+
 def get_skyline_routes_approx(ori, dst, graph, spend_graph, max_step):
     start_time = time.time()
 
-
-    all_paths = enumerate_all_path_approx(ori, dst, graph, max_step)
-    #all_paths = enumerate_all_path_approx_dp(ori, dst, graph, max_step)
+    all_paths = enumerate_all_path_approx_dp(ori, dst, graph, max_step)
 
     end_time = time.time()
     print(f"Method took {end_time - start_time} seconds to run.")
@@ -34,10 +60,9 @@ def get_skyline_routes_approx(ori, dst, graph, spend_graph, max_step):
                    for other_route in all_routes):
             skyline_routes.append(route)
 
-    print("hi", len(skyline_routes))
-    for bla in skyline_routes:
-        print(bla.path)
-
+    # for bla in skyline_routes:
+    #     print(bla.path)
+    return skyline_routes
 
 def enumerate_all_path_approx(ori, dst, graph, max_step):
     paths = []
@@ -53,7 +78,6 @@ def recur_find_all_path_approx(ori, dst, graph, path, paths, max_step):
     if ori == dst:
         paths.append(copy.deepcopy(path))
         path.pop()
-        print(len(paths))
         return
 
     for next_node in graph[ori]:

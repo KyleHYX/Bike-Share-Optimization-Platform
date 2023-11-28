@@ -1,32 +1,11 @@
 import heapq
 
-from backend.app.location_services.location_utils import get_markers_on_route
-from backend.data_collection.db_utils.db_ops import db_ops
-import polyline
+from backend.app.location_services.location_utils import parse_multi_station_route
 
 
 def find_free_route(ori, dst, free_time, graph):
     route = dijkstra(ori, dst, free_time, graph)
-    # retrieve markers
-    marker_cords = get_markers_on_route(route)
-    parsed_markers = [{'lat': marker[0], 'lng': marker[1]} for marker in marker_cords]
-
-    # retrieve polylines
-    polylines_cords = []
-    with db_ops() as c:
-        for i in range(len(route) - 1):
-            route_ori = route[i]
-            route_dst = route[i + 1]
-            q_res = c.execute(
-                "SELECT polyline_data FROM polylines WHERE time_station_origin = ? AND time_station_destination = ?",
-                (route_ori, route_dst)
-            )
-            route_polyline = q_res.fetchall()
-            decoded_polyline = polyline.decode(route_polyline[0][0])
-            polylines_cords.extend(decoded_polyline)
-
-    parsed_lines = [{'lat': line[0], 'lng': line[1]} for line in polylines_cords]
-    return {"parsed_lines": parsed_lines, "parsed_markers": parsed_markers}
+    return parse_multi_station_route(route)
 
 
 def dijkstra(ori, dst, free_time, graph):
