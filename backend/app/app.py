@@ -25,8 +25,8 @@ def create_app():
     def get_src_dst():
         start_time = time.time()
         data = request.json
-        src = data.get('src')
-        dst = data.get('dst')
+        src = data.get('src')[0]
+        dst = data.get('dst')[0]
         opt = data.get('opt')
         if opt == 0:
             parsed_data = get_fastest_route(src, dst)
