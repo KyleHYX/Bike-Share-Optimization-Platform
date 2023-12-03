@@ -180,26 +180,26 @@ const OpIsland = ({ onPolylineChange }) => {
             </>
           )}
           <div style={{ display: 'flex', alignItems: 'center', marginTop: '1rem' }}>
-        <Button 
-          variant="contained" 
-          color="primary" 
-          onClick={handleSubmit}
-          style={{ marginRight: '1rem' }} // Add some spacing between the button and the text
-        >
-          Submit
-        </Button>
-        <Typography variant="body1" style={{ color: '#000' /* Ensure text color is visible */ }}>
-          Place holder
-        </Typography>
-      </div>
+            <Button
+              variant="contained"
+              color="primary"
+              onClick={handleSubmit}
+              style={{ marginRight: '1rem' }} // Add some spacing between the button and the text
+            >
+              Submit
+            </Button>
+            <Typography variant="body1" style={{ color: '#000' /* Ensure text color is visible */ }}>
+              Place holder
+            </Typography>
+          </div>
         </div>
         <div>
-        <IconButton
-              onClick={toggleExpand}
-              style={{ color: 'grey', position: 'absolute', bottom: '5px', right: '5px'}}
-            >
-              {isExpanded ? <ExpandLessIcon /> : <ExpandMoreIcon />}
-            </IconButton>
+          <IconButton
+            onClick={toggleExpand}
+            style={{ color: 'grey', position: 'absolute', bottom: '5px', right: '5px' }}
+          >
+            {isExpanded ? <ExpandLessIcon /> : <ExpandMoreIcon />}
+          </IconButton>
         </div>
       </Box>
     </div>
