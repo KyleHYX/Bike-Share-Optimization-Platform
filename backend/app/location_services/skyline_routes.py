@@ -2,16 +2,9 @@ import copy
 import sys
 import time
 
-from backend.app.graph import config
 from backend.app.graph.station_graph import StationGraph
 from backend.app.location_services.location_utils import parse_multi_station_route
-
-
-class Route:
-    def __init__(self, path, time_cost, spend_cost):
-        self.path = path
-        self.time_cost = time_cost
-        self.spend_cost = spend_cost
+from backend.app.location_services.route import Route
 
 
 def get_skyline_result(ori, dst, sg, preference):
@@ -30,14 +23,11 @@ def get_skyline_result(ori, dst, sg, preference):
     opt_route = 0
     min_val = sys.maxsize
     for route in skyline_results:
-        cur_val = route.time_cost * weight * preference/10 + route.spend_cost * (10-preference)/10
+        cur_val = route.time_cost * weight * preference / 10 + route.spend_cost * (10 - preference) / 10
         if cur_val < min_val:
             opt_route = route
             min_val = cur_val
-    print(opt_route.spend_cost)
-    print(opt_route.time_cost)
-    return parse_multi_station_route(opt_route.path)
-
+    return parse_multi_station_route(opt_route)
 
 
 def get_skyline_routes_approx(ori, dst, graph, spend_graph, max_step):
@@ -64,6 +54,7 @@ def get_skyline_routes_approx(ori, dst, graph, spend_graph, max_step):
     #     print(bla.path)
     return skyline_routes
 
+
 def enumerate_all_path_approx(ori, dst, graph, max_step):
     paths = []
     recur_find_all_path_approx(ori, dst, graph, [], paths, max_step)
@@ -88,9 +79,11 @@ def recur_find_all_path_approx(ori, dst, graph, path, paths, max_step):
             recur_find_all_path_approx(next_node, dst, graph, path, paths, max_step - 1)
     path.pop()
 
+
 def enumerate_all_path_approx_dp(ori, dst, graph, max_step):
     memo = {}  # Memoization dictionary
     return recur_find_all_path_approx_dp(ori, dst, graph, [], max_step, memo)
+
 
 def recur_find_all_path_approx_dp(ori, dst, graph, path, max_step, memo):
     if max_step < 0:

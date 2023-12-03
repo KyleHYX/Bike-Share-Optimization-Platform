@@ -37,7 +37,7 @@ def create_app():
             return jsonify(parsed_data)
         elif opt == 1:
             sg = StationGraph()
-            parsed_data = find_free_route(src, dst, 8, sg.graph)
+            parsed_data = find_free_route(src, dst, 8, sg)
             print(parsed_data)
 
             end_time = time.time()
@@ -48,7 +48,7 @@ def create_app():
             print(preference)
             sg = StationGraph()
             if preference == 0:
-                parsed_data = find_free_route(src, dst, 8, sg.graph)
+                parsed_data = find_free_route(src, dst, 8, sg)
                 return jsonify(parsed_data)
             elif preference == 10:
                 parsed_data = get_fastest_route(src, dst)

@@ -1,10 +1,12 @@
 import heapq
 
 from backend.app.location_services.location_utils import parse_multi_station_route
+from backend.app.location_services.skyline_routes import construct_route_info
 
 
-def find_free_route(ori, dst, free_time, graph):
-    route = dijkstra(ori, dst, free_time, graph)
+def find_free_route(ori, dst, free_time, sg):
+    path = dijkstra(ori, dst, free_time, sg.graph)
+    route = construct_route_info(path, sg.graph, sg.spend_graph)
     return parse_multi_station_route(route)
 
 

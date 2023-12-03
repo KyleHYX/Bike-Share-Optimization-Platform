@@ -5,9 +5,11 @@ import ExpandLessIcon from '@mui/icons-material/ExpandLess';
 import Autocomplete from '@mui/material/Autocomplete';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
+import AccessTimeIcon from '@mui/icons-material/AccessTime';
+import AttachMoneyIcon from '@mui/icons-material/AttachMoney';
 
 
-const OpIsland = ({ onPolylineChange }) => {
+const OpIsland = ({ onPolylineChange, timeCost, spendCost }) => {
   const [isExpanded, setIsExpanded] = useState(true);
   const [src, setSrc] = useState('');
   const [dst, setDst] = useState('');
@@ -36,7 +38,7 @@ const OpIsland = ({ onPolylineChange }) => {
     transform: 'translateX(-50%)',
     transition: 'height 0.3s ease',
     borderRadius: '15px',
-    height: isExpanded ? calculateDynamicHeight() : '10vh',
+    height: isExpanded ? calculateDynamicHeight() : '5vh',
     display: 'flex',
     flexDirection: 'column',
   };
@@ -177,21 +179,37 @@ const OpIsland = ({ onPolylineChange }) => {
                 onChange={handleSliderChange}
                 disabled={opt !== 2}
               />
+              <div style={{ display: 'flex', alignItems: 'center', marginTop: '1rem' }}>
+                <Button
+                  variant="contained"
+                  color="primary"
+                  onClick={handleSubmit}
+                  style={{ marginRight: '1rem' }}
+                >
+                  View Route
+                </Button>
+                <div style={{ display: 'flex', alignItems: 'center' }}>
+                  {timeCost != null && (
+                    <div style={{ marginRight: '20px', display: 'flex', alignItems: 'center' }}>
+                      <AccessTimeIcon color="primary" style={{ marginRight: '8px'}}/>
+                      <Typography color="#616161" variant="body1" style={{ marginBottom: '0' }}>
+                        Estimated time: {timeCost} mins
+                      </Typography>
+                    </div>
+                  )}
+                  {spendCost != null && (
+                    <div style={{ display: 'flex', alignItems: 'center' }}>
+                      <AttachMoneyIcon color="primary" style={{ marginRight: '8px' }}/>
+                      <Typography color="#616161" variant="body1" style={{ marginBottom: '0' }}>
+                        Estimated cost: {spendCost} dollars
+                      </Typography>
+                    </div>
+                  )}
+                </div>
+              </div>
             </>
+
           )}
-          <div style={{ display: 'flex', alignItems: 'center', marginTop: '1rem' }}>
-            <Button
-              variant="contained"
-              color="primary"
-              onClick={handleSubmit}
-              style={{ marginRight: '1rem' }} // Add some spacing between the button and the text
-            >
-              Submit
-            </Button>
-            <Typography variant="body1" style={{ color: '#000' /* Ensure text color is visible */ }}>
-              Place holder
-            </Typography>
-          </div>
         </div>
         <div>
           <IconButton
