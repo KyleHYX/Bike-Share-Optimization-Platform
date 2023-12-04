@@ -7,6 +7,8 @@ import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import AccessTimeIcon from '@mui/icons-material/AccessTime';
 import AttachMoneyIcon from '@mui/icons-material/AttachMoney';
+import SpeedIcon from '@mui/icons-material/Speed';
+import MoneyOffIcon from '@mui/icons-material/MoneyOff';
 
 
 const OpIsland = ({ onPolylineChange, timeCost, spendCost }) => {
@@ -170,15 +172,20 @@ const OpIsland = ({ onPolylineChange, timeCost, spendCost }) => {
                 label="Skyline Routes"
                 style={{ color: '#333333' }}
               />
+              <div style={{ width: '100%', display: 'flex', alignItems: 'center' }}>
+                <SpeedIcon style={{ marginRight: '8px' }} />
+                <Slider
+                  value={sliderValue}
+                  min={0}
+                  max={10}
+                  step={1}
+                  onChange={handleSliderChange}
+                  disabled={opt !== 2}
+                />
+                <MoneyOffIcon style={{ marginLeft: '8px' }} />
 
-              <Slider
-                value={sliderValue}
-                min={0}
-                max={10}
-                step={1}
-                onChange={handleSliderChange}
-                disabled={opt !== 2}
-              />
+              </div>
+
               <div style={{ display: 'flex', alignItems: 'center', marginTop: '1rem' }}>
                 <Button
                   variant="contained"
@@ -191,7 +198,7 @@ const OpIsland = ({ onPolylineChange, timeCost, spendCost }) => {
                 <div style={{ display: 'flex', alignItems: 'center' }}>
                   {timeCost != null && (
                     <div style={{ marginRight: '20px', display: 'flex', alignItems: 'center' }}>
-                      <AccessTimeIcon color="primary" style={{ marginRight: '8px'}}/>
+                      <AccessTimeIcon color="primary" style={{ marginRight: '8px' }} />
                       <Typography color="#616161" variant="body1" style={{ marginBottom: '0' }}>
                         Estimated time: {timeCost} mins
                       </Typography>
@@ -199,7 +206,7 @@ const OpIsland = ({ onPolylineChange, timeCost, spendCost }) => {
                   )}
                   {spendCost != null && (
                     <div style={{ display: 'flex', alignItems: 'center' }}>
-                      <AttachMoneyIcon color="primary" style={{ marginRight: '8px' }}/>
+                      <AttachMoneyIcon color="primary" style={{ marginRight: '8px' }} />
                       <Typography color="#616161" variant="body1" style={{ marginBottom: '0' }}>
                         Estimated cost: {spendCost} dollars
                       </Typography>
