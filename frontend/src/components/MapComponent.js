@@ -24,7 +24,7 @@ const MapComponent = ({ polylineData, markerData }) => {
     strokeWeight: 2,
   };
 
-  const { isLoaded } = useJsApiLoader({ id: 'google-map-script', googleMapsApiKey: 'AIzaSyB_qcC0gZ_KdDt48vDlhyRZX6xswDAmH_E' })
+  const { isLoaded } = useJsApiLoader({ id: 'google-map-script', googleMapsApiKey: process.env.REACT_APP_GOOGLE_MAP_API_KEY })
 
   const [map, setMap] = React.useState(null)
 
