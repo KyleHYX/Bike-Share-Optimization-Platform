@@ -24,9 +24,9 @@ const OpIsland = ({ onPolylineChange, timeCost, spendCost }) => {
 
     const isLandscape = window.innerWidth > window.innerHeight;
     if (isLandscape) {
-      dynamicHeight = '40%'
+      dynamicHeight = '55%'
     } else {
-      dynamicHeight = '22%'
+      dynamicHeight = '40%'
     }
 
     return dynamicHeight;
@@ -173,7 +173,7 @@ const OpIsland = ({ onPolylineChange, timeCost, spendCost }) => {
                 style={{ color: '#333333' }}
               />
               <div style={{ width: '100%', display: 'flex', alignItems: 'center' }}>
-                <SpeedIcon style={{ marginRight: '8px' }} />
+                <MoneyOffIcon style={{ marginLeft: '8px' }} />
                 <Slider
                   value={sliderValue}
                   min={0}
@@ -182,7 +182,7 @@ const OpIsland = ({ onPolylineChange, timeCost, spendCost }) => {
                   onChange={handleSliderChange}
                   disabled={opt !== 2}
                 />
-                <MoneyOffIcon style={{ marginLeft: '8px' }} />
+                <SpeedIcon style={{ marginRight: '8px' }} />
 
               </div>
 

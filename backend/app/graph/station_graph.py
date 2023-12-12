@@ -1,7 +1,7 @@
 import heapq
 import polyline
 
-from backend.app.location_services.location_utils import get_markers_on_route
+from backend.app.location_services.location_utils import get_markers_on_route, cal_spend
 from backend.data_collection.db_utils.db_ops import db_ops
 
 
@@ -20,19 +20,9 @@ class StationGraph:
         for ori in self.graph:
             spend_graph[ori] = {}
             for dst in self.graph[ori]:
-                spend_graph[ori][dst] = self.cal_spend(ori, dst)
+                spend_graph[ori][dst] = cal_spend(self.graph[ori][dst])
 
         self.spend_graph = spend_graph
-
-    def cal_spend(self, ori, dst, free_time=8, rate=0.25):
-        time = self.graph[ori][dst]
-        cost = 0
-        if time <= free_time:
-            return cost
-
-        extra_time = time - free_time
-        cost += rate * extra_time
-        return cost
 
 
     def construct_time_graph(self):

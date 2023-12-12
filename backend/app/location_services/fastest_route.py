@@ -1,6 +1,6 @@
 import math
 
-from backend.app.location_services.location_utils import get_markers_on_route
+from backend.app.location_services.location_utils import get_markers_on_route, cal_spend
 from backend.data_collection.db_utils.db_ops import db_ops
 import polyline
 
@@ -23,4 +23,6 @@ def get_fastest_route(src, dst):
         time = time_res.fetchall()[0][0]
         time_min = int(math.ceil(time / 60))
 
-    return {"parsed_lines": parsed_lines, "parsed_markers": parsed_markers, "time_cost": time_min, "spend_cost": 0}
+        spend = cal_spend(time_min)
+
+    return {"parsed_lines": parsed_lines, "parsed_markers": parsed_markers, "time_cost": time_min, "spend_cost": spend}

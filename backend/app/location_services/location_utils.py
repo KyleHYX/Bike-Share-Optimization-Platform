@@ -38,3 +38,13 @@ def parse_multi_station_route(route: Route):
 
     parsed_lines = [{'lat': line[0], 'lng': line[1]} for line in polylines_cords]
     return {"parsed_lines": parsed_lines, "parsed_markers": parsed_markers, "time_cost": route.time_cost, "spend_cost": route.spend_cost}
+
+
+def cal_spend(time, free_time=8, rate=0.25):
+    cost = 0
+    if time <= free_time:
+        return cost
+
+    extra_time = time - free_time
+    cost += rate * extra_time
+    return cost
