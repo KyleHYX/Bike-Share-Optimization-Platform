@@ -2,8 +2,6 @@ import React from 'react';
 import { GoogleMap, useJsApiLoader, Polyline, Marker } from '@react-google-maps/api';
 
 const MapComponent = ({ polylineData, markerData }) => {
-  const iconBase = "https://developers.google.com/maps/documentation/javascript/examples/full/images/";
-
   const containerStyle = {
     width: '100%',
     height: '100%',
@@ -41,9 +39,9 @@ const MapComponent = ({ polylineData, markerData }) => {
 
       {markerData.map((markerPosition, index) => {
         let iconUrl;
-        if (index === 0) iconUrl = "";
-        else if (index === markerData.length - 1) iconUrl = "";
-        else iconUrl = "https://maps.google.com/mapfiles/kml/shapes/cycling.png";
+        if (index === 0) iconUrl = "https://maps.gstatic.com/mapfiles/ms2/micons/blue.png";
+        else if (index === markerData.length - 1) iconUrl = "http://maps.gstatic.com/mapfiles/ms2/micons/pink.png";
+        else iconUrl = "http://maps.gstatic.com/mapfiles/ms2/micons/cycling.png";
 
         return (
           <Marker
