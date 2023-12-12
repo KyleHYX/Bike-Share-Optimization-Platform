@@ -15,8 +15,8 @@ def get_fastest_route(src, dst):
         parsed_lines = [{'lat': line[0], 'lng': line[1]} for line in decoded_polyline]
 
         route = [src, dst]
-        marker_cords = get_markers_on_route(route)
-        parsed_markers = [{'lat': marker[0], 'lng': marker[1]} for marker in marker_cords]
+        parsed_markers = get_markers_on_route(route)
+        #parsed_markers = [{'lat': marker[0], 'lng': marker[1]} for marker in marker_cords]
 
         time_res = c.execute("SELECT duration_value FROM time_stations WHERE origin = ? AND destination = ?",
                              (src, dst))

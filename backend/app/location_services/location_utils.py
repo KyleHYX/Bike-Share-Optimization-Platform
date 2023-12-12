@@ -12,15 +12,20 @@ def get_markers_on_route(route: list):
                 (station,)
             )
             marker_cord = q_res.fetchall()
-            marker_cords.extend(marker_cord)
+            if marker_cord:
+                lat, lng = marker_cord[0]
+                marker_cords.append((lat, lng, station, ))
+            print(marker_cord)
 
-    return marker_cords
+    parsed_markers = [{"station": marker[2], "pos": {'lat': marker[0], 'lng': marker[1]}} for marker in marker_cords]
+
+    return parsed_markers
 
 
 def parse_multi_station_route(route: Route):
     # retrieve markers
-    marker_cords = get_markers_on_route(route.path)
-    parsed_markers = [{'lat': marker[0], 'lng': marker[1]} for marker in marker_cords]
+    parsed_markers = get_markers_on_route(route.path)
+    #parsed_markers = [{'lat': marker[0], 'lng': marker[1]} for marker in marker_cords]
 
     # retrieve polylines
     polylines_cords = []

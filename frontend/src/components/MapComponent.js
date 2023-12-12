@@ -1,7 +1,32 @@
 import React from 'react';
-import { GoogleMap, useJsApiLoader, Polyline, Marker } from '@react-google-maps/api';
+import { GoogleMap, useJsApiLoader, Polyline, Marker, OverlayView } from '@react-google-maps/api';
 
 const MapComponent = ({ polylineData, markerData }) => {
+  const CustomMarker = ({ position, iconUrl, text }) => {
+    const markerStyle = {
+      position: 'absolute',
+      transform: 'translate(-50%, -100%)',
+      textAlign: 'center',
+    };
+
+    const textStyle = {
+      color: 'blue',
+      fontSize: '8px',
+      whiteSpace: 'nowrap',
+    };
+
+    return (
+      <OverlayView
+        position={position}
+        mapPaneName={OverlayView.OVERLAY_MOUSE_TARGET}
+      >
+        <div style={markerStyle}>
+          <img src={iconUrl} style={{ height: '28px' }} />
+          <div style={textStyle}>{text}</div>
+        </div>
+      </OverlayView>
+    );
+  };
   const containerStyle = {
     width: '100%',
     height: '100%',
@@ -44,10 +69,11 @@ const MapComponent = ({ polylineData, markerData }) => {
         else iconUrl = "http://maps.gstatic.com/mapfiles/ms2/micons/cycling.png";
 
         return (
-          <Marker
+          <CustomMarker
             key={index}
-            position={markerPosition}
-            icon={iconUrl}
+            position={markerPosition.pos}
+            iconUrl={iconUrl}
+            text={markerPosition.station}
           />
         );
       })}
