@@ -8,4 +8,4 @@ class StationsModel:
             self.stations = q_res.fetchall()
 
     def get_stations(self):
-        return self.stations
+        return self.stations[0:50]

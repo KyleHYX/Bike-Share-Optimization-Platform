@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Box, TextField, Checkbox, FormControlLabel, IconButton, Slider } from '@mui/material';
+import { Box, TextField, IconButton, Slider } from '@mui/material';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import ExpandLessIcon from '@mui/icons-material/ExpandLess';
 import Autocomplete from '@mui/material/Autocomplete';
@@ -15,9 +15,8 @@ const OpIsland = ({ onPolylineChange, timeCost, spendCost }) => {
   const [isExpanded, setIsExpanded] = useState(true);
   const [src, setSrc] = useState('');
   const [dst, setDst] = useState('');
-  const [opt, setOpt] = useState(0);
   const [sliderValue, setSliderValue] = useState(5);
-  const [locations, setLocations] = useState(0);
+  const [locations, setLocations] = useState([]);
 
   const calculateDynamicHeight = () => {
     let dynamicHeight = '';
@@ -49,39 +48,44 @@ const OpIsland = ({ onPolylineChange, timeCost, spendCost }) => {
     setIsExpanded(!isExpanded);
   };
 
-  const handleSrcChange = (event) => {
-    setSrc(event.target.value);
+  const handleSrcChange = (event, newValue) => {
+    setSrc(newValue);
+    //handleSubmit();
   };
 
-  const handleDstChange = (event) => {
-    setDst(event.target.value);
-  };
-
-  const handleCheckboxChange = (event) => {
-    setOpt(Number(event.target.value));
+  const handleDstChange = (event, newValue) => {
+    setDst(newValue);
+    //handleSubmit();
   };
 
   const handleSliderChange = (event, newValue) => {
     setSliderValue(newValue);
+    //handleSubmit();
   };
 
   const handleSubmit = async () => {
-    try {
-      const response = await fetch('http://localhost:3333/get-src-dst', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ src, dst, opt, sliderValue }),
-      });
+    if (src != "" && dst != '') {
+      try {
+        const response = await fetch('http://localhost:3333/get-src-dst', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ src, dst, sliderValue }),
+        });
 
-      const data = await response.json();
-      console.log(data);
-      onPolylineChange(data);
-    } catch (error) {
-      console.error('Error submitting the form', error);
+        const data = await response.json();
+        console.log(data);
+        onPolylineChange(data);
+      } catch (error) {
+        console.error('Error submitting the form', error);
+      }
     }
   };
+
+  useEffect(() => {
+    handleSubmit();
+  }, [src, dst, sliderValue]);
 
   const getLocations = async () => {
     try {
@@ -126,9 +130,10 @@ const OpIsland = ({ onPolylineChange, timeCost, spendCost }) => {
               <Autocomplete
                 fullWidth
                 options={locations}
+                getOptionLabel={(option) => typeof option === 'string' ? option : option.toString()}
                 value={src}
                 onChange={(event, newValue) => {
-                  setSrc(newValue);
+                  handleSrcChange(event, newValue);
                 }}
                 renderInput={(params) => (
                   <TextField {...params} label="src" variant="outlined" style={{ marginBottom: '1rem' }} />
@@ -137,41 +142,16 @@ const OpIsland = ({ onPolylineChange, timeCost, spendCost }) => {
               <Autocomplete
                 fullWidth
                 options={locations}
+                getOptionLabel={(option) => typeof option === 'string' ? option : option.toString()}
                 value={dst}
                 onChange={(event, newValue) => {
-                  setDst(newValue);
+                  handleDstChange(event, newValue);
                 }}
                 renderInput={(params) => (
                   <TextField {...params} label="dst" variant="outlined" style={{ marginBottom: '1rem' }} />
                 )}
               />
 
-              <FormControlLabel
-                control={<Checkbox
-                  checked={opt === 1}
-                  onChange={handleCheckboxChange}
-                  value="1" />}
-                label="Free Route"
-                style={{ color: '#333333' }}
-              />
-
-              <FormControlLabel
-                control={<Checkbox
-                  checked={opt === 0}
-                  onChange={handleCheckboxChange}
-                  value="0" />}
-                label="Fastest Route"
-                style={{ color: '#333333' }}
-              />
-
-              <FormControlLabel
-                control={<Checkbox
-                  checked={opt === 2}
-                  onChange={handleCheckboxChange}
-                  value="2" />}
-                label="Skyline Routes"
-                style={{ color: '#333333' }}
-              />
               <div style={{ width: '100%', display: 'flex', alignItems: 'center' }}>
                 <MoneyOffIcon style={{ marginLeft: '8px' }} />
                 <Slider
@@ -180,21 +160,12 @@ const OpIsland = ({ onPolylineChange, timeCost, spendCost }) => {
                   max={10}
                   step={1}
                   onChange={handleSliderChange}
-                  disabled={opt !== 2}
                 />
                 <SpeedIcon style={{ marginRight: '8px' }} />
 
               </div>
 
               <div style={{ display: 'flex', alignItems: 'center', marginTop: '1rem' }}>
-                <Button
-                  variant="contained"
-                  color="primary"
-                  onClick={handleSubmit}
-                  style={{ marginRight: '1rem' }}
-                >
-                  View Route
-                </Button>
                 <div style={{ display: 'flex', alignItems: 'center' }}>
                   {timeCost != null && (
                     <div style={{ marginRight: '20px', display: 'flex', alignItems: 'center' }}>

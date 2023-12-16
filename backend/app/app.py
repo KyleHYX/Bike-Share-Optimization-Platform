@@ -23,38 +23,28 @@ def create_app():
     @app.route('/get-src-dst', methods=['POST'])
     @cross_origin()
     def get_src_dst():
-        start_time = time.time()
-        data = request.json
-        src = data.get('src')[0]
-        dst = data.get('dst')[0]
-        opt = data.get('opt')
-        if opt == 0:
-            parsed_data = get_fastest_route(src, dst)
-            print(parsed_data)
-
-            end_time = time.time()
-            print(f"Method took {end_time - start_time} seconds to run.")
-            return jsonify(parsed_data)
-        elif opt == 1:
-            sg = StationGraph()
-            parsed_data = find_free_route(src, dst, 8, sg)
-            print(parsed_data)
-
-            end_time = time.time()
-            print(f"Method took {end_time - start_time} seconds to run.")
-            return jsonify(parsed_data)
-        elif opt == 2:
+        try:
+            start_time = time.time()
+            data = request.json
+            src = data.get('src')[0]
+            dst = data.get('dst')[0]
             preference = data.get('sliderValue')
-            print(preference)
-            sg = StationGraph()
             if preference == 0:
+                sg = StationGraph()
                 parsed_data = find_free_route(src, dst, 8, sg)
+
+                end_time = time.time()
+                print(f"Method took {end_time - start_time} seconds to run.")
                 return jsonify(parsed_data)
-            elif preference == 10:
-                parsed_data = get_fastest_route(src, dst)
+            else:
+                sg = StationGraph()
+                parsed_data = get_skyline_result(src, dst, sg, preference)
+
+                end_time = time.time()
+                print(f"Method took {end_time - start_time} seconds to run.")
                 return jsonify(parsed_data)
-            parsed_data = get_skyline_result(src, dst, sg, preference)
-            return jsonify(parsed_data)
+        except Exception as e:
+            print(e)
 
     @app.route('/get-locations', methods=['GET'])
     @cross_origin()
@@ -62,5 +52,3 @@ def create_app():
         return jsonify(stationsModel.get_stations())
 
     return app
-
-
