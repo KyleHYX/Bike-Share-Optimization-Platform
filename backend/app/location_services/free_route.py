@@ -26,9 +26,10 @@ def dijkstra(ori, dst, free_time, graph):
         for neighbor, weight in graph[cur_station].items():
             if neighbor not in visited:
                 # skip the station if user cannot arrive within free quota
-                if weight >= free_time:
+                if weight > free_time:
                     continue
-                time = cur_time + weight
+                # add 1 min bike return & borrow overhead
+                time = cur_time + weight + 1
                 if time < times[neighbor]:
                     times[neighbor] = time
                     predecessors[neighbor] = cur_station
