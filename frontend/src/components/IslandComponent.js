@@ -64,7 +64,7 @@ const OpIsland = ({ onPolylineChange, timeCost, spendCost }) => {
   };
 
   const handleSubmit = async () => {
-    if (src != "" && dst != '') {
+    if (src !== "" && dst !== '' && locations.includes(src) && locations.includes(dst)) {
       try {
         const response = await fetch('http://localhost:3333/get-src-dst', {
           method: 'POST',

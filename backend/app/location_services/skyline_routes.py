@@ -2,6 +2,8 @@ import copy
 import sys
 import time
 
+import math
+
 from backend.app.graph.station_graph import StationGraph
 from backend.app.location_services.location_utils import parse_multi_station_route
 from backend.app.location_services.route import Route
@@ -9,9 +11,9 @@ from backend.app.location_services.route import Route
 
 def get_skyline_result(ori, dst, sg, preference):
     free_time = 8
-    max_step = sg.graph[ori][dst] / free_time + 3
+    max_step = sg.graph[ori][dst] // free_time + 3
     skyline_results = get_skyline_routes_approx(ori, dst, sg.graph, sg.spend_graph, max_step)
-    print("There are: ", len(skyline_results), "results")
+    print("There are: ", len(skyline_results), "skyline results")
 
     time_cost_sum = 0
     spend_cost_sum = 0
@@ -37,6 +39,7 @@ def get_skyline_routes_approx(ori, dst, graph, spend_graph, max_step):
     all_routes = []
     for path in all_paths:
         all_routes.append(construct_route_info(path, graph, spend_graph))
+    print("Total Routes", len(all_routes))
 
     skyline_routes = []
     for route in all_routes:
@@ -85,22 +88,25 @@ def recur_find_all_path_approx_dp(ori, dst, graph, path, max_step, memo):
 
     memo_key = (ori, max_step)
     if memo_key in memo:
-        return [path + p for p in memo[memo_key]]
+        path_copy = copy.deepcopy(path)
+        return [path_copy + p for p in memo[memo_key]]
 
     path.append(ori)
     if ori == dst:
-        return [copy.deepcopy(path)]
+        path_copy = copy.deepcopy(path)
+        path.pop()
+        return [path_copy]
 
     paths = []
     for next_node in graph[ori]:
-        if ((next_node == dst or
-             (graph[next_node][dst] < graph[ori][dst] and graph[ori][next_node] < graph[ori][dst]))
-                and next_node not in path):
-            paths.extend(recur_find_all_path_approx_dp(next_node, dst, graph, copy.deepcopy(path), max_step - 1, memo))
+        if (next_node == dst or
+            (graph[next_node][dst] < graph[ori][dst] and graph[ori][next_node] < graph[ori][dst])) and (
+                next_node not in path):
+            paths.extend(recur_find_all_path_approx_dp(next_node, dst, graph, path, max_step - 1, memo))
 
     path.pop()
 
-    memo[memo_key] = paths
+    memo[memo_key] = [copy.deepcopy(p[len(path):]) for p in paths]
     return paths
 
 
@@ -161,5 +167,5 @@ if __name__ == "__main__":
     ori, dst = "Cardero & Robson", "10th & Cambie"
     ori, dst = "Cypress & Cornwall", "Hornby & Nelson"
     free_time = 8
-    max_step = sg.graph[ori][dst] / free_time + 3
+    max_step = math.ceil(sg.graph[ori][dst] / free_time) + 3
     get_skyline_routes_approx(ori, dst, sg.graph, sg.spend_graph, max_step)
