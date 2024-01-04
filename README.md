@@ -68,3 +68,20 @@ Move it towards the other end to favor faster travel at a higher cost.
 ### Viewing the Route
 ***Route Display***: After setting your preferences, the route that best matches your criteria will be drawn on the map.
 Exchange Instructions and Information: Along with the route, you will receive detailed instructions for exchanges (if any) and information about the estimated time and cost for the journey.
+
+### Features
+The Bike-Share-Optimization-Platform offers a range of features designed to enhance the biking experience for both urban commuters and leisure cyclists:
+
+1. Intelligent Route Planning: Utilizes advanced algorithms to plan the best possible routes, considering factors like time cost and spend cost.
+
+2. Interactive Map Interface: A user-friendly map that allows users to select their start and destination points easily.
+
+3. Customizable Preferences: Useres allowed to set their preference for a balance between speed and expenditure. This feature ensures that the route suggested aligns with the user's individual needs and preferences.
+
+4. Approximate Skyline Results: The application employs smart pruning and dynamic programming to generate approximate skyline routes. These routes are almost identical to the actual best routes in terms of cost and time efficiency but are computed with significantly reduced time complexity.
+
+5. Real-Time Route Visualization: The chosen route, along with necessary exchange instructions and cost/time information, is displayed in real-time on the map, providing a clear and comprehensive overview of the journey.
+
+6. Responsive Design: The application is designed to be responsive, ensuring a seamless experience across different devices and screen sizes.
+
+7. Environment-Friendly Travel: By focusing on bike travel, the application promotes an eco-friendly mode of transportation, suitable for urban environments and reducing carbon footprints.
