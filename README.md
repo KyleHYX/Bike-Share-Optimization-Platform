@@ -69,7 +69,7 @@ Move it towards the other end to favor faster travel at a higher cost.
 ***Route Display***: After setting your preferences, the route that best matches your criteria will be drawn on the map.
 Exchange Instructions and Information: Along with the route, you will receive detailed instructions for exchanges (if any) and information about the estimated time and cost for the journey.
 
-### Features
+## Features
 The Bike-Share-Optimization-Platform offers a range of features designed to enhance the biking experience for both urban commuters and leisure cyclists:
 
 1. Intelligent Route Planning: Utilizes advanced algorithms to plan the best possible routes, considering factors like time cost and spend cost.
