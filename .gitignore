@@ -7,3 +7,5 @@
 **/__pycache__/
 /__pycache__/
 frontend/.env
+frontend/.firebaserc
+frontend/.firebase/hosting.YnVpbGQ.cache

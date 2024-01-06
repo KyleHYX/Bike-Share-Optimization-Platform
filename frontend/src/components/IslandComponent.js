@@ -66,7 +66,7 @@ const OpIsland = ({ onPolylineChange, timeCost, spendCost }) => {
   const handleSubmit = async () => {
     if (src !== "" && dst !== '' && locations.includes(src) && locations.includes(dst)) {
       try {
-        const response = await fetch('http://localhost:3333/get-src-dst', {
+        const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/get-src-dst`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -88,8 +88,9 @@ const OpIsland = ({ onPolylineChange, timeCost, spendCost }) => {
   }, [src, dst, sliderValue]);
 
   const getLocations = async () => {
+    console.log(process.env.REACT_APP_BACKEND_URL)
     try {
-      const response = await fetch(`http://localhost:3333/get-locations`, {
+      const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/get-locations`, {
         method: 'GET',
         headers: {
           'Content-Type': 'text/plain',
