@@ -23,9 +23,9 @@ const OpIsland = ({ onPolylineChange, timeCost, spendCost }) => {
 
     const isLandscape = window.innerWidth > window.innerHeight;
     if (isLandscape) {
-      dynamicHeight = '55%'
+      dynamicHeight = '44%'
     } else {
-      dynamicHeight = '40%'
+      dynamicHeight = '25%'
     }
 
     return dynamicHeight;

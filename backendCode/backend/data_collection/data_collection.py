@@ -1,3 +1,5 @@
+import json
+
 import requests
 from backend.data_collection.db_utils.db_ops import db_ops
 
@@ -93,3 +95,47 @@ class DataCollection:
 
         if direction_data:
             self.__insert_into_database(origin['name'], destination['name'], direction_data)
+
+if __name__ == "__main__":
+    #base_url = "https://maps.googleapis.com/maps/api/distancematrix/json?"
+    base_url = "https://routes.googleapis.com/directions/v2:computeRoutes"
+    params = {
+        "origins": [f"{49.262487},{-123.114397}",],
+        "destinations": [f"{49.275295},{-123.132585}",],
+        "mode": "bicycling",
+        "key": "AIzaSyA8XQhu2CiH7E06mKrAgMwJ61q2dytfhlc",
+        "alternatives": True,
+        "computeAlternativeRoutes": True
+    }
+
+    headers = {
+        'Content-Type': 'application/json',
+        'X-Goog-Api-Key': 'AIzaSyA8XQhu2CiH7E06mKrAgMwJ61q2dytfhlc',
+        'X-Goog-FieldMask': 'routes.duration,routes.distanceMeters,routes.polyline.encodedPolyline'
+    }
+
+    body = {
+        "origin": {
+            "location": {
+                "latLng": {
+                    "latitude": 49.262487,
+                    "longitude": -123.114397
+                }
+            }
+        },
+        "destination": {
+            "location": {
+                "latLng": {
+                    "latitude": 49.275295,
+                    "longitude": -123.132585
+                }
+            }
+        },
+        "computeAlternativeRoutes": True,
+        "travelMode": "BICYCLE"
+    }
+
+    #response = requests.get(base_url, params=params)
+    response = requests.post(base_url, headers=headers, data=json.dumps(body))
+    data = response.json()
+    print(data)
