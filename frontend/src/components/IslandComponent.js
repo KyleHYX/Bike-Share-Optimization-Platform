@@ -3,12 +3,12 @@ import { Box, TextField, IconButton, Slider } from '@mui/material';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import ExpandLessIcon from '@mui/icons-material/ExpandLess';
 import Autocomplete from '@mui/material/Autocomplete';
-import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import AccessTimeIcon from '@mui/icons-material/AccessTime';
 import AttachMoneyIcon from '@mui/icons-material/AttachMoney';
 import SpeedIcon from '@mui/icons-material/Speed';
 import MoneyOffIcon from '@mui/icons-material/MoneyOff';
+import SignOut  from './SignoutComponent';
 
 
 const OpIsland = ({ onPolylineChange, timeCost, spendCost }) => {
@@ -185,6 +185,7 @@ const OpIsland = ({ onPolylineChange, timeCost, spendCost }) => {
                   )}
                 </div>
               </div>
+              <div><SignOut></SignOut></div>
             </>
 
           )}
