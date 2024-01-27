@@ -2,6 +2,9 @@ import React, { useState } from 'react';
 import { Container } from 'react-bootstrap';
 import MapComponent from './components/MapComponent';
 import OpIsland from './components/IslandComponent';
+import LoginComponent from './components/LoginComponent'
+import { useAuth } from './components/AuthContext'
+
 
 function App() {
   const [polylineData, setPolylineData] = useState([]);
@@ -20,6 +23,14 @@ function App() {
     setTimeCost(newData.time_cost);
     setSpendCost(newData.spend_cost);
   };
+
+  const { user } = useAuth();
+
+  if (!user) {
+    return (
+      <LoginComponent />
+    );
+  }
 
   return (
     <Container fluid>
