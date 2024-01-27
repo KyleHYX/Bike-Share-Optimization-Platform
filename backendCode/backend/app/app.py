@@ -4,11 +4,9 @@ from flask import Flask, request, jsonify
 from flask_cors import CORS, cross_origin
 
 from backend.app.graph.station_graph import StationGraph
-from backend.app.location_services.fastest_route import get_fastest_route
 from backend.app.location_services.free_route import find_free_route
 from backend.app.location_services.skyline_routes import get_skyline_result
 from backend.app.stations_model import StationsModel
-import polyline
 
 
 def create_app():

@@ -1,5 +1,5 @@
+from backend.app.db_utils.db_ops import db_ops
 from backend.app.location_services.route import Route
-from backend.data_collection.db_utils.db_ops import db_ops
 import polyline
 
 

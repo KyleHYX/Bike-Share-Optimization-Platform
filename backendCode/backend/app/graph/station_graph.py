@@ -1,8 +1,9 @@
 import heapq
 import polyline
 
-from backend.app.location_services.location_utils import get_markers_on_route, cal_spend
-from backend.data_collection.db_utils.db_ops import db_ops
+from backend.app.db_utils.db_ops import db_ops
+from backend.app.location_services.location_utils import cal_spend
+
 
 
 class StationGraph:

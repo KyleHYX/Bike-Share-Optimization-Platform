@@ -1,7 +1,7 @@
 import sqlite3
 from sqlite3 import Cursor
 
-from backend.data_collection.db_utils.db_ops import db_ops
+from db_utils.db_ops import db_ops
 
 
 class DBSetUp:

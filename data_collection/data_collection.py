@@ -1,7 +1,8 @@
 import json
 
 import requests
-from backend.data_collection.db_utils.db_ops import db_ops
+
+from db_utils.db_ops import db_ops
 
 
 class DataCollection:

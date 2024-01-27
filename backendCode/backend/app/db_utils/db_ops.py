@@ -1,7 +1,7 @@
 import sqlite3
 from contextlib import contextmanager
 
-from backend.data_collection.db_utils.dbconfig import DATABASE_URL
+from backend.app.db_utils.dbconfig import DATABASE_URL
 
 
 @contextmanager

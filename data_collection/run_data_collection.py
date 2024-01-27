@@ -1,5 +1,5 @@
-from backend.data_collection.data_collection import DataCollection
-from backend.data_collection.db_setup import DBSetUp
+from data_collection import DataCollection
+from db_setup import DBSetUp
 
 if __name__ == "__main__":
     API_KEY = ''
