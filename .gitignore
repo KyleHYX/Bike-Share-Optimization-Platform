@@ -9,3 +9,4 @@
 frontend/.env
 frontend/.firebaserc
 frontend/.firebase/hosting.YnVpbGQ.cache
+frontend/.env.development
