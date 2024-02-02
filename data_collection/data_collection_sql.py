@@ -5,7 +5,7 @@ import requests
 from db_utils.db_ops import db_ops
 
 
-class DataCollection:
+class DataCollectionSql:
     def __init__(self):
         pass
 
