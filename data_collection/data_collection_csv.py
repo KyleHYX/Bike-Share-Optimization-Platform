@@ -79,8 +79,7 @@ class DataCollectionCsv:
                                       directions_data['duration_value'],
                                       directions_data['distance_value']])
 
-        decoded_polyline = polyline.decode(directions_data['polyline'])
-        polyline_writer.writerow([origin_id, destination_id, decoded_polyline])
+        polyline_writer.writerow([origin_id, destination_id, directions_data['polyline']])
 
     def __query_store_direction(self, stations, i, j, API_KEY, station_time_writer, polyline_writer):
         origin = stations[i]
