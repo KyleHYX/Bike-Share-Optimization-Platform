@@ -13,3 +13,5 @@ frontend/.env.development
 
 *.csv
 *.db
+data_collection/db_utils/data_collection_config.py
+data_collection/db_utils/.env

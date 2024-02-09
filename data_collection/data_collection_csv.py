@@ -21,6 +21,32 @@ class DataCollectionCsv:
             for station in stations:
                 writer.writerow([station["name"], station["latitude"], station["longitude"]])
 
+
+    def get_pitts_bike_stations(self) -> list[dict]:
+        """
+        Description:
+            Read cvs file from
+
+        :return:
+            stations: list[dict] list of dictionary mapping stations name, lat, long.
+        """
+        with open('bike_stations_pitts.csv', 'r') as file:
+            csv_reader = csv.reader(file)
+            # skip first line
+            next(csv_reader, None)
+
+            stations = []
+
+            for row in csv_reader:
+                station = {
+                    "name": row[2],
+                    "latitude": row[4],
+                    "longitude": row[5]
+                }
+                stations.append(station)
+
+        return stations
+
     def get_vancouver_bike_stations(self) -> list[dict]:
         """
         Description:
