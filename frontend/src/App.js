@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Container } from 'react-bootstrap';
 import MapComponent from './components/MapComponent';
 import OpIsland from './components/IslandComponent';
@@ -11,6 +11,29 @@ function App() {
   const [markerData, setMarkerData] = useState([]);
   const [timeCost, setTimeCost] = useState(null);
   const [spendCost, setSpendCost] = useState(null);
+  const [locations, setLocations] = useState([]);
+
+  // method moved from IslandComponent
+  // acquire locations here as both map component and island component need locations
+  useEffect(() => {
+    const getLocations = async () => {
+      console.log(process.env.REACT_APP_BACKEND_URL)
+      try {
+        const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/get-locations`, {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'text/plain',
+          }
+        });
+        const data = await response.json();
+        setLocations(data);
+      } catch (error) {
+        console.error("Failed to fetch locations:", error);
+      }
+    };
+    
+    getLocations();
+  }, []);
 
 
   const handlePolylineChange = (newData) => {
@@ -34,8 +57,8 @@ function App() {
 
   return (
     <Container fluid>
-      <MapComponent polylineData={polylineData} markerData={markerData} />
-      <OpIsland onPolylineChange={handlePolylineChange} spendCost={spendCost} timeCost={timeCost} />
+      <MapComponent polylineData={polylineData} markerData={markerData} locations={locations}/>
+      <OpIsland onPolylineChange={handlePolylineChange} spendCost={spendCost} timeCost={timeCost} locations={locations} />
     </Container>
   );
 }

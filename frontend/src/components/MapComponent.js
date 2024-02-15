@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { GoogleMap, useJsApiLoader, Polyline, OverlayView } from '@react-google-maps/api';
 
-const MapComponent = ({ polylineData, markerData }) => {
+const MapComponent = ({ polylineData, markerData, locations }) => {
   // ORI/DST
   const [locMode, setLocMode] = useState('');
   const [oriLoc, setOriLoc] = useState(null);

@@ -11,12 +11,11 @@ import MoneyOffIcon from '@mui/icons-material/MoneyOff';
 import SignOut  from './SignoutComponent';
 
 
-const OpIsland = ({ onPolylineChange, timeCost, spendCost }) => {
+const OpIsland = ({ onPolylineChange, timeCost, spendCost, locations}) => {
   const [isExpanded, setIsExpanded] = useState(true);
   const [src, setSrc] = useState('');
   const [dst, setDst] = useState('');
   const [sliderValue, setSliderValue] = useState(5);
-  const [locations, setLocations] = useState([]);
 
   const calculateDynamicHeight = () => {
     let dynamicHeight = '';
@@ -86,32 +85,6 @@ const OpIsland = ({ onPolylineChange, timeCost, spendCost }) => {
   useEffect(() => {
     handleSubmit();
   }, [src, dst, sliderValue]);
-
-  const getLocations = async () => {
-    console.log(process.env.REACT_APP_BACKEND_URL)
-    try {
-      const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/get-locations`, {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'text/plain',
-        }
-      });
-      return await response.json();
-    } catch (error) {
-      console.error("Failed to fetch locations:", error);
-    }
-  };
-
-  useEffect(() => {
-    const fetchLocations = async () => {
-      const fetchedLocations = await getLocations();
-      if (fetchedLocations) {
-        setLocations(fetchedLocations);
-      }
-    };
-
-    fetchLocations();
-  }, []);
 
   return (
     <div style={opIslandStyle}>
