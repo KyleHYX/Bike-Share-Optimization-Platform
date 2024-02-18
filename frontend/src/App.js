@@ -12,6 +12,16 @@ function App() {
   const [timeCost, setTimeCost] = useState(null);
   const [spendCost, setSpendCost] = useState(null);
   const [locations, setLocations] = useState([]);
+  const [oriLoc, setOriLoc] = useState(null);
+  const [dstLoc, setDstLoc] = useState(null);
+  const [oriStationInfo, setOriStationInfo] = useState(null);
+  const [dstStationInfo, setDstStationInfo] = useState(null);
+  const [showTapLoc, setShowTapLoc] = useState(false);
+  const [locMode, setLocMode] = useState('');
+
+  useEffect(() => {
+    setShowTapLoc(oriLoc !== null && dstLoc !== null);
+  }, [oriLoc, dstLoc]);
 
   // method moved from IslandComponent
   // acquire locations here as both map component and island component need locations
@@ -27,11 +37,12 @@ function App() {
         });
         const data = await response.json();
         setLocations(data);
+        console.log(locations)
       } catch (error) {
         console.error("Failed to fetch locations:", error);
       }
     };
-    
+
     getLocations();
   }, []);
 
@@ -57,8 +68,12 @@ function App() {
 
   return (
     <Container fluid>
-      <MapComponent polylineData={polylineData} markerData={markerData} locations={locations}/>
-      <OpIsland onPolylineChange={handlePolylineChange} spendCost={spendCost} timeCost={timeCost} locations={locations} />
+      <MapComponent polylineData={polylineData} markerData={markerData} locations={locations} oriLoc={oriLoc}
+      dstLoc={dstLoc} showTapLoc={showTapLoc} setOriLoc={setOriLoc} setDstLoc={setDstLoc} locMode={locMode} setLocMode={setLocMode} 
+      setOriStationInfo={setOriStationInfo} setDstStationInfo={setDstStationInfo} />
+      <OpIsland onPolylineChange={handlePolylineChange} spendCost={spendCost} timeCost={timeCost} 
+      locations={locations} setOriLoc = {setOriLoc} setDstLoc = {setDstLoc} setLocMode={setLocMode} showTapLoc={showTapLoc}
+      oriLoc={oriLoc} dstLoc={dstLoc} oriStationInfo={oriStationInfo} dstStationInfo={dstStationInfo}/>
     </Container>
   );
 }

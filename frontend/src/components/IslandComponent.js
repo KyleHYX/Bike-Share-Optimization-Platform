@@ -11,7 +11,7 @@ import MoneyOffIcon from '@mui/icons-material/MoneyOff';
 import SignOut  from './SignoutComponent';
 
 
-const OpIsland = ({ onPolylineChange, timeCost, spendCost, locations}) => {
+const OpIsland = ({ onPolylineChange, timeCost, spendCost, locations, setOriLoc, setDstLoc, setLocMode, showTapLoc, oriLoc, dstLoc, oriStationInfo, dstStationInfo }) => {
   const [isExpanded, setIsExpanded] = useState(true);
   const [src, setSrc] = useState('');
   const [dst, setDst] = useState('');
@@ -49,28 +49,40 @@ const OpIsland = ({ onPolylineChange, timeCost, spendCost, locations}) => {
 
   const handleSrcChange = (event, newValue) => {
     setSrc(newValue);
-    //handleSubmit();
   };
 
   const handleDstChange = (event, newValue) => {
     setDst(newValue);
-    //handleSubmit();
   };
 
   const handleSliderChange = (event, newValue) => {
     setSliderValue(newValue);
-    //handleSubmit();
   };
 
   const handleSubmit = async () => {
+    let src_parm = null;
+    let dst_parm = null;
+
+    console.log("hihihi")
+    console.log(oriStationInfo)
+    console.log(dstStationInfo)
+
     if (src !== "" && dst !== '' && locations.includes(src) && locations.includes(dst)) {
+      src_parm = src;
+      dst_parm = dst;
+    } else if (showTapLoc && oriStationInfo != null && dstStationInfo != null) {
+      src_parm = oriStationInfo;
+      dst_parm = dstStationInfo;
+    }
+    
+    if (src_parm != null && dst_parm != null) {
       try {
         const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/get-src-dst`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
           },
-          body: JSON.stringify({ src, dst, sliderValue }),
+          body: JSON.stringify({ src: src_parm, dst: dst_parm, sliderValue }),
         });
 
         const data = await response.json();
@@ -84,7 +96,15 @@ const OpIsland = ({ onPolylineChange, timeCost, spendCost, locations}) => {
 
   useEffect(() => {
     handleSubmit();
-  }, [src, dst, sliderValue]);
+  }, [src, dst, sliderValue, oriStationInfo, dstStationInfo]);
+
+  const setLocModeOri = () => setLocMode('ORI')
+  const setLocModeDst = () => setLocMode('DST')
+
+  const modeButtonStyle = {
+    position: 'absolute',
+    zIndex: 10,
+  }
 
   return (
     <div style={opIslandStyle}>
@@ -172,6 +192,11 @@ const OpIsland = ({ onPolylineChange, timeCost, spendCost, locations}) => {
             {isExpanded ? <ExpandLessIcon /> : <ExpandMoreIcon />}
           </IconButton>
         </div>
+
+        <div>
+        <button style={modeButtonStyle} onClick={setLocModeOri}>Set Origin</button>
+        <button stype={modeButtonStyle} onClick={setLocModeDst}>Set Destination</button>
+      </div>
       </Box>
     </div>
   );

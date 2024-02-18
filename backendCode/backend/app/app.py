@@ -24,6 +24,7 @@ def create_app():
         try:
             start_time = time.time()
             data = request.json
+            print(data)
             src = data.get('src')[0]
             dst = data.get('dst')[0]
             preference = data.get('sliderValue')

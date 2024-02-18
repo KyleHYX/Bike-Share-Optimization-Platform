@@ -1,16 +1,86 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { GoogleMap, useJsApiLoader, Polyline, OverlayView } from '@react-google-maps/api';
 
-const MapComponent = ({ polylineData, markerData, locations }) => {
-  // ORI/DST
-  const [locMode, setLocMode] = useState('');
-  const [oriLoc, setOriLoc] = useState(null);
-  const [dstLoc, setDstLoc] = useState(null);
+const MapComponent = ({ polylineData, markerData, locations, oriLoc, dstLoc, showTapLoc, setOriLoc, setDstLoc, locMode, setLocMode, setOriStationInfo, setDstStationInfo }) => {
+  const mapRef = useRef(null);
+
+  useEffect(() => {
+    if (showTapLoc && oriLoc != null && dstLoc != null) {
+      nearestStation()
+    }
+  }, [showTapLoc, oriLoc, dstLoc])
+
+  const nearestStation = () => {
+    const oriNearestStation = getNeareastStations(oriLoc)
+    const dstNearestStation = getNeareastStations(dstLoc)
+
+    console.log(oriNearestStation)
+    console.log(dstNearestStation)
+    setOriStationInfo(oriNearestStation)
+    setDstStationInfo(dstNearestStation)
+
+    plotWalkingRoute(oriLoc, {lat: oriNearestStation[1], lng: oriNearestStation[2]})
+    plotWalkingRoute(dstLoc, {lat: dstNearestStation[1], lng: dstNearestStation[2]})
+  }
+
+  const getNeareastStations = (tgtLoc) => {
+    let nearestStation = null;
+    let minDist = Number.MAX_VALUE;
+    let locationsCord = locations.map(location => ({
+      lat: location[1],
+      lng: location[2]
+    }));
+
+    for (let i = 0; i < locationsCord.length; i++) {
+      const curDist = getDist(tgtLoc, locationsCord[i]);
+      if (curDist < minDist) {
+        minDist = curDist;
+        nearestStation = locations[i];
+      }
+    }
+
+    return nearestStation;
+  }
+
+  // Haversin formula, credit to stackoverflow
+  const getDist = (loc1, loc2) => {
+    const R = 6371;
+    const dLat = (loc2.lat - loc1.lat) * Math.PI / 180;
+    const dLng = (loc2.lng - loc1.lng) * Math.PI / 180;
+    const a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+      Math.cos(loc1.lat * Math.PI / 180) * Math.cos(loc2.lat * Math.PI / 180) *
+      Math.sin(dLng / 2) * Math.sin(dLng / 2);
+    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+    const distance = R * c;
+    return distance;
+  };
+
+  const plotWalkingRoute = (tgtLoc, tgtStationLoc) => {
+    if (!window.google || !mapRef.current) return;
+
+    const directionsService = new window.google.maps.DirectionsService();
+    const directionsRenderer = new window.google.maps.DirectionsRenderer();
+    directionsRenderer.setMap(mapRef.current);
+
+    const walkingRouteRequest = {
+      origin: tgtLoc,
+      destination: tgtStationLoc,
+      travelMode: window.google.maps.TravelMode.WALKING,
+    };
+
+    directionsService.route(walkingRouteRequest, (result, status) => {
+      if (status === window.google.maps.DirectionsStatus.OK) {
+        directionsRenderer.setDirections(result);
+      } else {
+        console.error('Directions request failed: ' + status);
+      }
+    });
+  };
 
   const onMapClick = (e) => {
     const loc = {
       lat: e.latLng.lat(),
-      lng: e.latLng.lat(),
+      lng: e.latLng.lng(),
     };
 
     if (locMode === 'ORI') {
@@ -21,9 +91,6 @@ const MapComponent = ({ polylineData, markerData, locations }) => {
       setLocMode('');
     }
   };
-
-  const setLocModeOri = () => setLocMode('ORI')
-  const setLocModeDst = () => setLocMode('DST')
 
   const CustomMarker = ({ position, iconUrl, text }) => {
     const markerStyle = {
@@ -71,59 +138,41 @@ const MapComponent = ({ polylineData, markerData, locations }) => {
     strokeWeight: 2,
   };
 
-  const barIndicateSytle = {
-    height: '10px',
-    backgroundColor: 'orange',
-    width: '100%',
-    position: 'absolute',
-    zIndex: 10,
-  };
-
-  const modeButtonStyle = {
-    position: 'absolute',
-    zIndex: 10,
-  }
-
   const { isLoaded } = useJsApiLoader({ id: 'google-map-script', googleMapsApiKey: process.env.REACT_APP_GOOGLE_MAP_API_KEY })
 
   return (
     <div>
-      {locMode != '' ? <div style={barIndicateSytle}></div> : <></>}
-      {oriLoc != null ? <div style={barIndicateSytle}>{oriLoc.lat}{oriLoc.lng}</div> : <></>}
-      <div>
-        <button style={modeButtonStyle} onClick={setLocModeOri}>Set Origin</button>
-        <button stype={modeButtonStyle} onClick={setLocModeDst}>Set Destination {dstLoc}</button>
-      </div>
-        {isLoaded ? (
-          <GoogleMap
-            mapContainerStyle={containerStyle}
-            center={center}
-            zoom={10}
-            onClick={onMapClick}
-          >
-            <Polyline
-              path={polylineData}
-              options={polylineOptions}
-            />
+      {isLoaded ? (
+        <GoogleMap
+          mapContainerStyle={containerStyle}
+          center={center}
+          zoom={10}
+          onClick={onMapClick}
+          onLoad={map => mapRef.current = map}
+        >
+          <Polyline
+            path={polylineData}
+            options={polylineOptions}
+          />
 
-            {markerData.map((markerPosition, index) => {
-              let iconUrl;
-              if (index === 0) iconUrl = "https://maps.gstatic.com/mapfiles/ms2/micons/blue.png";
-              else if (index === markerData.length - 1) iconUrl = "http://maps.gstatic.com/mapfiles/ms2/micons/pink.png";
-              else iconUrl = "http://maps.gstatic.com/mapfiles/ms2/micons/cycling.png";
+          {markerData.map((markerPosition, index) => {
+            let iconUrl;
+            if (index === 0) iconUrl = "https://maps.gstatic.com/mapfiles/ms2/micons/blue.png";
+            else if (index === markerData.length - 1) iconUrl = "http://maps.gstatic.com/mapfiles/ms2/micons/pink.png";
+            else iconUrl = "http://maps.gstatic.com/mapfiles/ms2/micons/cycling.png";
 
-              return (
-                <CustomMarker
-                  key={index}
-                  position={markerPosition.pos}
-                  iconUrl={iconUrl}
-                  text={markerPosition.station}
-                />
-              );
-            })}
-          </GoogleMap>
-        ) : <></>}
-        </div>
+            return (
+              <CustomMarker
+                key={index}
+                position={markerPosition.pos}
+                iconUrl={iconUrl}
+                text={markerPosition.station}
+              />
+            );
+          })}
+        </GoogleMap>
+      ) : <></>}
+    </div>
   );
 };
 
