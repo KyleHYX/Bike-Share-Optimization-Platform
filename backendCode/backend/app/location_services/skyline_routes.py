@@ -30,6 +30,17 @@ def get_skyline_result(ori, dst, sg, preference):
             min_val = cur_val
     return parse_multi_station_route(opt_route)
 
+def find_skyline(res):
+    res.sort(key=lambda route: (-route.time_cost, -route.spend_cost))
+    skyline_res = []
+    max_spend = -sys.maxsize
+
+    for route in res:
+        if route.spend_cost > max_spend:
+            skyline_res.append(route)
+            max_spend = route.spend_cost
+    return skyline_res
+
 
 def get_skyline_routes_approx(ori, dst, graph, spend_graph, max_step):
     all_paths = enumerate_all_path_approx_dp(ori, dst, graph, max_step)
@@ -39,13 +50,15 @@ def get_skyline_routes_approx(ori, dst, graph, spend_graph, max_step):
         all_routes.append(construct_route_info(path, graph, spend_graph))
     print("Total Routes", len(all_routes))
 
-    skyline_routes = []
-    for route in all_routes:
-        if not any(other_route != route and
-                   other_route.time_cost <= route.time_cost and
-                   other_route.spend_cost <= route.spend_cost
-                   for other_route in all_routes):
-            skyline_routes.append(route)
+    # skyline_routes = []
+    # for route in all_routes:
+    #     if not any(other_route != route and
+    #                other_route.time_cost <= route.time_cost and
+    #                other_route.spend_cost <= route.spend_cost
+    #                for other_route in all_routes):
+    #         skyline_routes.append(route)
+
+    skyline_routes = find_skyline(all_routes)
 
     return skyline_routes
 
