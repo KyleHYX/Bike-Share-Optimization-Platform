@@ -14,14 +14,9 @@ function App() {
   const [locations, setLocations] = useState([]);
   const [oriLoc, setOriLoc] = useState(null);
   const [dstLoc, setDstLoc] = useState(null);
-  const [oriStationInfo, setOriStationInfo] = useState(null);
-  const [dstStationInfo, setDstStationInfo] = useState(null);
-  const [showTapLoc, setShowTapLoc] = useState(false);
+  const [src, setSrc] = useState('');
+  const [dst, setDst] = useState('');
   const [locMode, setLocMode] = useState('');
-
-  useEffect(() => {
-    setShowTapLoc(oriLoc !== null && dstLoc !== null);
-  }, [oriLoc, dstLoc]);
 
   // method moved from IslandComponent
   // acquire locations here as both map component and island component need locations
@@ -69,11 +64,11 @@ function App() {
   return (
     <Container fluid>
       <MapComponent polylineData={polylineData} markerData={markerData} locations={locations} oriLoc={oriLoc}
-      dstLoc={dstLoc} showTapLoc={showTapLoc} setOriLoc={setOriLoc} setDstLoc={setDstLoc} locMode={locMode} setLocMode={setLocMode} 
-      setOriStationInfo={setOriStationInfo} setDstStationInfo={setDstStationInfo} />
-      <OpIsland onPolylineChange={handlePolylineChange} spendCost={spendCost} timeCost={timeCost} 
-      locations={locations} setOriLoc = {setOriLoc} setDstLoc = {setDstLoc} setLocMode={setLocMode} showTapLoc={showTapLoc}
-      oriLoc={oriLoc} dstLoc={dstLoc} oriStationInfo={oriStationInfo} dstStationInfo={dstStationInfo}/>
+      dstLoc={dstLoc} setOriLoc={setOriLoc} setDstLoc={setDstLoc} locMode={locMode} setLocMode={setLocMode} 
+      src={src} setSrc={setSrc} dst={dst} setDst={setDst} />
+      <OpIsland onPolylineChange={handlePolylineChange} spendCost={spendCost} timeCost={timeCost} locations={locations} setOriLoc = {setOriLoc} 
+      setDstLoc = {setDstLoc} setLocMode={setLocMode} src={src} setSrc={setSrc} dst={dst} setDst={setDst}
+      oriLoc={oriLoc} dstLoc={dstLoc}/>
     </Container>
   );
 }

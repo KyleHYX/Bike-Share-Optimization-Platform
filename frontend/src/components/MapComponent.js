@@ -1,14 +1,14 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { GoogleMap, useJsApiLoader, Polyline, OverlayView } from '@react-google-maps/api';
 
-const MapComponent = ({ polylineData, markerData, locations, oriLoc, dstLoc, showTapLoc, setOriLoc, setDstLoc, locMode, setLocMode, setOriStationInfo, setDstStationInfo }) => {
+const MapComponent = ({ polylineData, markerData, locations, oriLoc, dstLoc, setOriLoc, setDstLoc, locMode, setLocMode, src, setSrc, dst, setDst }) => {
   const mapRef = useRef(null);
 
   useEffect(() => {
-    if (showTapLoc && oriLoc != null && dstLoc != null) {
+    if (oriLoc != null && dstLoc != null) {
       nearestStation()
     }
-  }, [showTapLoc, oriLoc, dstLoc])
+  }, [oriLoc, dstLoc])
 
   const nearestStation = () => {
     const oriNearestStation = getNeareastStations(oriLoc)
@@ -16,8 +16,8 @@ const MapComponent = ({ polylineData, markerData, locations, oriLoc, dstLoc, sho
 
     console.log(oriNearestStation)
     console.log(dstNearestStation)
-    setOriStationInfo(oriNearestStation)
-    setDstStationInfo(dstNearestStation)
+    setSrc(oriNearestStation)
+    setDst(dstNearestStation)
 
     plotWalkingRoute(oriLoc, {lat: oriNearestStation[1], lng: oriNearestStation[2]})
     plotWalkingRoute(dstLoc, {lat: dstNearestStation[1], lng: dstNearestStation[2]})

@@ -11,10 +11,8 @@ import MoneyOffIcon from '@mui/icons-material/MoneyOff';
 import SignOut  from './SignoutComponent';
 
 
-const OpIsland = ({ onPolylineChange, timeCost, spendCost, locations, setOriLoc, setDstLoc, setLocMode, showTapLoc, oriLoc, dstLoc, oriStationInfo, dstStationInfo }) => {
+const OpIsland = ({ onPolylineChange, timeCost, spendCost, locations, setLocMode, showTapLoc, dst, setDst, src, setSrc }) => {
   const [isExpanded, setIsExpanded] = useState(true);
-  const [src, setSrc] = useState('');
-  const [dst, setDst] = useState('');
   const [sliderValue, setSliderValue] = useState(5);
 
   const calculateDynamicHeight = () => {
@@ -60,29 +58,14 @@ const OpIsland = ({ onPolylineChange, timeCost, spendCost, locations, setOriLoc,
   };
 
   const handleSubmit = async () => {
-    let src_parm = null;
-    let dst_parm = null;
-
-    console.log("hihihi")
-    console.log(oriStationInfo)
-    console.log(dstStationInfo)
-
-    if (src !== "" && dst !== '' && locations.includes(src) && locations.includes(dst)) {
-      src_parm = src;
-      dst_parm = dst;
-    } else if (showTapLoc && oriStationInfo != null && dstStationInfo != null) {
-      src_parm = oriStationInfo;
-      dst_parm = dstStationInfo;
-    }
-    
-    if (src_parm != null && dst_parm != null) {
+    if (src !== "" && dst !== '') {
       try {
         const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/get-src-dst`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
           },
-          body: JSON.stringify({ src: src_parm, dst: dst_parm, sliderValue }),
+          body: JSON.stringify({ src, dst, sliderValue }),
         });
 
         const data = await response.json();
@@ -96,7 +79,7 @@ const OpIsland = ({ onPolylineChange, timeCost, spendCost, locations, setOriLoc,
 
   useEffect(() => {
     handleSubmit();
-  }, [src, dst, sliderValue, oriStationInfo, dstStationInfo]);
+  }, [src, dst, sliderValue]);
 
   const setLocModeOri = () => setLocMode('ORI')
   const setLocModeDst = () => setLocMode('DST')
@@ -121,7 +104,7 @@ const OpIsland = ({ onPolylineChange, timeCost, spendCost, locations, setOriLoc,
         <div style={{ flex: 1, marginRight: '1.5rem' }}>
           {isExpanded && (
             <>
-              <Autocomplete
+              {/* <Autocomplete
                 fullWidth
                 options={locations}
                 getOptionLabel={(option) => typeof option === 'string' ? option : option.toString()}
@@ -144,7 +127,7 @@ const OpIsland = ({ onPolylineChange, timeCost, spendCost, locations, setOriLoc,
                 renderInput={(params) => (
                   <TextField {...params} label="dst" variant="outlined" style={{ marginBottom: '1rem' }} />
                 )}
-              />
+              /> */}
 
               <div style={{ width: '100%', display: 'flex', alignItems: 'center' }}>
                 <MoneyOffIcon style={{ marginLeft: '8px' }} />
