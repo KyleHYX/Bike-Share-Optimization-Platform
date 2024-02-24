@@ -31,12 +31,12 @@ def get_skyline_result(ori, dst, sg, preference):
     return parse_multi_station_route(opt_route)
 
 def find_skyline(res):
-    res.sort(key=lambda route: (-route.time_cost, -route.spend_cost))
+    res.sort(key=lambda route: (route.time_cost, route.spend_cost))
     skyline_res = []
-    max_spend = -sys.maxsize
+    max_spend = sys.maxsize
 
     for route in res:
-        if route.spend_cost > max_spend:
+        if route.spend_cost < max_spend:
             skyline_res.append(route)
             max_spend = route.spend_cost
     return skyline_res
