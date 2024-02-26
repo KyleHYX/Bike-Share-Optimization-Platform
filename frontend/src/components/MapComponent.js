@@ -3,6 +3,9 @@ import { GoogleMap, useJsApiLoader, Polyline, OverlayView } from '@react-google-
 
 const MapComponent = ({ polylineData, markerData, locations, oriLoc, dstLoc, setOriLoc, setDstLoc, locMode, setLocMode, src, setSrc, dst, setDst }) => {
   const mapRef = useRef(null);
+  const [directionsRenderers, setDirectionsRenderers] = useState([]);
+  const [oriMarker, setOriMarker] = useState(null);
+  const [dstMarker, setDstMarker] = useState(null);
 
   useEffect(() => {
     if (oriLoc != null && dstLoc != null) {
@@ -19,8 +22,8 @@ const MapComponent = ({ polylineData, markerData, locations, oriLoc, dstLoc, set
     setSrc(oriNearestStation)
     setDst(dstNearestStation)
 
-    plotWalkingRoute(oriLoc, {lat: oriNearestStation[1], lng: oriNearestStation[2]})
-    plotWalkingRoute(dstLoc, {lat: dstNearestStation[1], lng: dstNearestStation[2]})
+    plotWalkingRoute(oriLoc, { lat: oriNearestStation[1], lng: oriNearestStation[2] })
+    plotWalkingRoute(dstLoc, { lat: dstNearestStation[1], lng: dstNearestStation[2] })
   }
 
   const getNeareastStations = (tgtLoc) => {
@@ -58,8 +61,16 @@ const MapComponent = ({ polylineData, markerData, locations, oriLoc, dstLoc, set
   const plotWalkingRoute = (tgtLoc, tgtStationLoc) => {
     if (!window.google || !mapRef.current) return;
 
+    // Clear previous routes
+    directionsRenderers.forEach(renderer => renderer.setMap(null));
+    setDirectionsRenderers([]);
+
     const directionsService = new window.google.maps.DirectionsService();
-    const directionsRenderer = new window.google.maps.DirectionsRenderer();
+    const directionsRenderer = new window.google.maps.DirectionsRenderer(
+      {
+        suppressMarkers: true
+      });
+
     directionsRenderer.setMap(mapRef.current);
 
     const walkingRouteRequest = {
@@ -71,6 +82,7 @@ const MapComponent = ({ polylineData, markerData, locations, oriLoc, dstLoc, set
     directionsService.route(walkingRouteRequest, (result, status) => {
       if (status === window.google.maps.DirectionsStatus.OK) {
         directionsRenderer.setDirections(result);
+        setDirectionsRenderers(prevRenderers => [...prevRenderers, directionsRenderer]);
       } else {
         console.error('Directions request failed: ' + status);
       }
@@ -92,6 +104,41 @@ const MapComponent = ({ polylineData, markerData, locations, oriLoc, dstLoc, set
     }
   };
 
+  const setClickMarker = (location, existingMarker, setMarkerFunction, label) => {
+    if (!window.google || !mapRef.current) {
+      return;
+    }
+
+    const markerLabel = {
+      text: label,
+      fontSize: '12px',
+    };
+
+    if (existingMarker) {
+      existingMarker.setPosition(location);
+      existingMarker.setLabel(label)
+    } else {
+      const marker = new window.google.maps.Marker({
+        position: location,
+        map: mapRef.current,
+        label: label,
+      });
+      setMarkerFunction(marker);
+    }
+  };
+
+  useEffect(() => {
+    if (oriLoc) {
+      setClickMarker(oriLoc, oriMarker, setOriMarker, 'S');
+    }
+  }, [oriLoc]);
+
+  useEffect(() => {
+    if (dstLoc) {
+      setClickMarker(dstLoc, dstMarker, setDstMarker, 'D');
+    }
+  }, [dstLoc]);
+
   const CustomMarker = ({ position, iconUrl, text }) => {
     const markerStyle = {
       position: 'absolute',
@@ -112,6 +159,32 @@ const MapComponent = ({ polylineData, markerData, locations, oriLoc, dstLoc, set
       >
         <div style={markerStyle}>
           <img src={iconUrl} style={{ height: '28px' }} />
+          <div style={textStyle}>{text}</div>
+        </div>
+      </OverlayView>
+    );
+  };
+
+  const StationMarker = ({ position, iconUrl, text }) => {
+    const markerStyle = {
+      position: 'absolute',
+      transform: 'translate(-50%, -100%)',
+      textAlign: 'center',
+    };
+
+    const textStyle = {
+      color: 'blue',
+      fontSize: '8px',
+      whiteSpace: 'nowrap',
+    };
+
+    return (
+      <OverlayView
+        position={position}
+        mapPaneName={OverlayView.OVERLAY_MOUSE_TARGET}
+      >
+        <div style={markerStyle}>
+          <img src={iconUrl} style={{ height: '15px', width: '15px' }} />
           <div style={textStyle}>{text}</div>
         </div>
       </OverlayView>
@@ -146,7 +219,7 @@ const MapComponent = ({ polylineData, markerData, locations, oriLoc, dstLoc, set
         <GoogleMap
           mapContainerStyle={containerStyle}
           center={center}
-          zoom={10}
+          zoom={13}
           onClick={onMapClick}
           onLoad={map => mapRef.current = map}
         >
@@ -167,6 +240,21 @@ const MapComponent = ({ polylineData, markerData, locations, oriLoc, dstLoc, set
                 position={markerPosition.pos}
                 iconUrl={iconUrl}
                 text={markerPosition.station}
+              />
+            );
+          })}
+
+          {locations.map((location, index) => {
+            const position = { lat: location[1], lng: location[2] };
+            const iconUrl = "http://maps.gstatic.com/mapfiles/ms2/micons/flag.png";
+            const text = location[0];
+
+            return (
+              <StationMarker
+                key={`station_${index}`}
+                position={position}
+                iconUrl={iconUrl}
+                //text={text}
               />
             );
           })}

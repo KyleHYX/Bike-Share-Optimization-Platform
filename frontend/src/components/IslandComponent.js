@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Box, TextField, IconButton, Slider } from '@mui/material';
+import { Box, TextField, IconButton, Slider, Button } from '@mui/material';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import ExpandLessIcon from '@mui/icons-material/ExpandLess';
 import Autocomplete from '@mui/material/Autocomplete';
@@ -20,9 +20,9 @@ const OpIsland = ({ onPolylineChange, timeCost, spendCost, locations, setLocMode
 
     const isLandscape = window.innerWidth > window.innerHeight;
     if (isLandscape) {
-      dynamicHeight = '44%'
+      dynamicHeight = '34%'
     } else {
-      dynamicHeight = '25%'
+      dynamicHeight = '40%'
     }
 
     return dynamicHeight;
@@ -84,10 +84,18 @@ const OpIsland = ({ onPolylineChange, timeCost, spendCost, locations, setLocMode
   const setLocModeOri = () => setLocMode('ORI')
   const setLocModeDst = () => setLocMode('DST')
 
-  const modeButtonStyle = {
-    position: 'absolute',
-    zIndex: 10,
-  }
+  const buttonContainerStyle = {
+    display: 'flex',
+    justifyContent: 'space-between',
+    width: '100%',
+    marginBottom: '1rem',
+    marginTop: '1rem',
+  };
+
+  const signOutButtonStyle = {
+    marginTop: '1rem',
+    marginBottom: '1rem'
+  };
 
   return (
     <div style={opIslandStyle}>
@@ -162,12 +170,29 @@ const OpIsland = ({ onPolylineChange, timeCost, spendCost, locations, setLocMode
                   )}
                 </div>
               </div>
-              <div><SignOut></SignOut></div>
-            </>
 
+              <div style={buttonContainerStyle}>
+                <Button variant="contained" color="primary" onClick={setLocModeOri}>
+                  Set ORI
+                </Button>
+                <Button variant="contained" color="primary" onClick={setLocModeDst}>
+                  Set DST
+                </Button>
+                <SignOut />
+              </div>
+
+              <div style= {signOutButtonStyle}>
+                <Typography color="#616161" variant="body1" style={{ marginBottom: '0', fontSize: '0.5rem'}}>
+                    Click "SET ORI" button then TAP/CLICK on MAP to set Origin Point.<br />
+                    Click "SET DST" button then TAP/CLICK on MAP to set Destionation Point.<br />
+                    Adjust Slider to set preference.
+                </Typography> 
+              </div>
+            </>
           )}
         </div>
-        <div>
+
+        <div style={buttonContainerStyle}>
           <IconButton
             onClick={toggleExpand}
             style={{ color: 'grey', position: 'absolute', bottom: '5px', right: '5px' }}
@@ -175,11 +200,6 @@ const OpIsland = ({ onPolylineChange, timeCost, spendCost, locations, setLocMode
             {isExpanded ? <ExpandLessIcon /> : <ExpandMoreIcon />}
           </IconButton>
         </div>
-
-        <div>
-        <button style={modeButtonStyle} onClick={setLocModeOri}>Set Origin</button>
-        <button stype={modeButtonStyle} onClick={setLocModeDst}>Set Destination</button>
-      </div>
       </Box>
     </div>
   );
